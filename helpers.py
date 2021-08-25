@@ -18,6 +18,12 @@ def create_dir_if_needed(path):
 def create_file_structure():
 
     ## create dirs if they don't exist
+
+    # labels
+    create_dir_if_needed(plas_label_path)
+    create_dir_if_needed(chrom_label_path)
+    create_dir_if_needed(ex_plas_label_path)
+
     # fragments
     create_dir_if_needed(plas_write_path)
     create_dir_if_needed(chrom_write_path)

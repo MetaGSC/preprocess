@@ -5,17 +5,22 @@ k = 7
 err_file = "error.txt"
 log_file = "log.txt"
 
-# databases
+# Databases
 # plas_db_path = "../databases/DNA-ML_FYP_2021/plasmid_refs"
 # chrom_db_path = '../databases/DNA-ML_FYP_2021/bacterial_references'
-plas_db_path = "../../databases/DNA-ML_FYP_2021/plas-ref-tiny"
+plas_db_path = "../../databases/DNA-ML_FYP_2021/plas-ref-small"
 chrom_db_path = '../../databases/DNA-ML_FYP_2021/bact-ref-tiny'
 db_path = "../../references/biomarkerdbs"
 
+# label files 
+plas_label_path = "results/plasmid/Label"
+chrom_label_path = "results/chromosome/Label"
+ex_plas_label_path = "results/extra-plasmid/Label"
+
 # fragment files
-plas_write_path = "results/plasmid/fragments"
-chrom_write_path = "results/chromosome/fragments"
-extra_plasmid_write_path = "results/extra-plasmid/fragments"
+plas_write_path = "results/plasmid/Data/fragments"
+chrom_write_path = "results/chromosome/Data/fragments"
+extra_plasmid_write_path = "results/extra-plasmid/Data/fragments"
 
 # fragment txt files
 plas_txt_write_path = "results/plasmid/extra/frag-txt"
@@ -27,14 +32,14 @@ plas_7mer_out_path = "results/plasmid/extra/7mer-out"
 chrom_7mer_out_path = "results/chromosome/extra/7mer-out"
 ex_plas_7mer_out_path = "results/extra-plasmid/extra/7mer-out"
 
-plas_7mer_write_path = "results/plasmid/7mers"
-chrom_7mer_write_path = "results/chromosome/7mers"
-ex_plas_7mer_write_path = "results/extra-plasmid/7mers"
+plas_7mer_write_path = "results/plasmid/Data/7mers"
+chrom_7mer_write_path = "results/chromosome/Data/7mers"
+ex_plas_7mer_write_path = "results/extra-plasmid/Data/7mers"
 
 # circularity files
-plas_circ_write_path = "results/plasmid/circular"
-chrom_circ_write_path = "results/chromosome/circular"
-ex_plas_circ_write_path = "results/extra-plasmid/circular"
+plas_circ_write_path = "results/plasmid/Data/circular"
+chrom_circ_write_path = "results/chromosome/Data/circular"
+ex_plas_circ_write_path = "results/extra-plasmid/Data/circular"
 
 plas_circ_out_path = "results/plasmid/extra/nucmer_out"
 chrom_circ_out_path = "results/chromosome/extra/nucmer_out"
@@ -49,14 +54,14 @@ plas_inc_out_path = "results/plasmid/extra/blastn-out"
 chrom_inc_out_path = "results/chromosome/extra/blastn-out"
 ex_plas_inc_out_path = "results/extra-plasmid/extra/blastn-out"
 
-plas_inc_write_path = "results/plasmid/inc-fac"
-chrom_inc_write_path = "results/chromosome/inc-fac"
-ex_plas_inc_write_path = "results/extra-plasmid/inc-fac"
+plas_inc_write_path = "results/plasmid/Data/inc-fac"
+chrom_inc_write_path = "results/chromosome/Data/inc-fac"
+ex_plas_inc_write_path = "results/extra-plasmid/Data/inc-fac"
 
 # rrna files
-plas_rrna_write_path = "results/plasmid/rrna"
-chrom_rrna_write_path = "results/chromosome/rrna"
-ex_plas_rrna_write_path = "results/extra-plasmid/rrna"
+plas_rrna_write_path = "results/plasmid/Data/rrna"
+chrom_rrna_write_path = "results/chromosome/Data/rrna"
+ex_plas_rrna_write_path = "results/extra-plasmid/Data/rrna"
 
 plas_rrna_out_path = "results/plasmid/extra/rrna-out"
 chrom_rrna_out_path = "results/chromosome/extra/rrna-out"
@@ -67,9 +72,9 @@ plas_orit_out_path = "results/plasmid/extra/orit-out"
 chrom_orit_out_path = "results/chromosome/extra/orit-out"
 ex_plas_orit_out_path = "results/extra-plasmid/extra/orit-out"
 
-plas_orit_write_path = "results/plasmid/orit"
-chrom_orit_write_path = "results/chromosome/orit"
-ex_plas_orit_write_path = "results/extra-plasmid/orit"
+plas_orit_write_path = "results/plasmid/Data/orit"
+chrom_orit_write_path = "results/chromosome/Data/orit"
+ex_plas_orit_write_path = "results/extra-plasmid/Data/orit"
 
 # mobilization, conjugation, replication files
 plas_mob_out_path = "results/plasmid/extra/mob-out" 
@@ -84,14 +89,14 @@ plas_con_out_path = "results/plasmid/extra/con-out"
 chrom_con_out_path = "results/chromosome/extra/con-out" 
 ex_plas_con_out_path = "results/extra-plasmid/extra/con-out" 
 
-plas_mob_write_path = "results/plasmid/mobilization" 
-chrom_mob_write_path = "results/chromosome/mobilization"
-ex_plas_mob_write_path = "results/extra-plasmid/mobilization" 
+plas_mob_write_path = "results/plasmid/Data/mobilization" 
+chrom_mob_write_path = "results/chromosome/Data/mobilization"
+ex_plas_mob_write_path = "results/extra-plasmid/Data/mobilization" 
 
-plas_rep_write_path = "results/plasmid/replication" 
-chrom_rep_write_path = "results/chromosome/replication"
-ex_plas_rep_write_path = "results/extra-plasmid/replication" 
+plas_rep_write_path = "results/plasmid/Data/replication" 
+chrom_rep_write_path = "results/chromosome/Data/replication"
+ex_plas_rep_write_path = "results/extra-plasmid/Data/replication" 
 
-plas_con_write_path = "results/plasmid/conjugation" 
-chrom_con_write_path = "results/chromosome/conjugation"
-ex_plas_con_write_path = "results/extra-plasmid/conjugation" 
+plas_con_write_path = "results/plasmid/Data/conjugation" 
+chrom_con_write_path = "results/chromosome/Data/conjugation"
+ex_plas_con_write_path = "results/extra-plasmid/Data/conjugation" 
