@@ -9,6 +9,7 @@ import subprocess as sp
 from pathlib import Path
 from math import log
 
+from progress_bar import create_progress_bars, update_progress_bar
 from constants import *
 from helpers import createFileStructure, timestamp
 from circular import checkCircularity, circularity
@@ -16,7 +17,7 @@ from kmer import count_kmers
 from inc_fac import inc_factor
 from rrna import rRNA_search
 from orit import orit_search
-from mobrepconj import special_gene_search
+from specialgene import special_gene_search
     
 def plas_frag_generator(dir_path, frag_len, split_path, out_path, coverage, err_file):
     for filename in os.listdir(dir_path):
@@ -93,39 +94,47 @@ def plasmid_worker(
     rrna_out_path, rrna_write_path,
     orit_out_path, orit_write_path,
     mob_out_path, rep_out_path, con_out_path, mob_write_path, rep_write_path, con_write_path,
-    err_file, log_file):
+    progress_bar, err_file, log_file):
 
     n, frag = input
 
     write_plas_frags(input, frag_path, frag_txt_path, err_file, log_file)
-    # count_kmers(k, input, frag_txt_path, kmer_write_path, kmer_out_path, err_file)
-    # circularity(input, circ_write_path, err_file)
-    # inc_factor(input, db_path, frag_txt_path, inc_out_path, inc_write_path, err_file)
-    # rRNA_search(input, frag_txt_path, rrna_out_path, rrna_write_path, db_path, err_file)
+    count_kmers(k, input, frag_txt_path, kmer_write_path, kmer_out_path, err_file)
+    circularity(input, circ_write_path, err_file)
+    inc_factor(input, db_path, frag_txt_path, inc_out_path, inc_write_path, err_file)
+    rRNA_search(input, frag_txt_path, rrna_out_path, rrna_write_path, db_path, err_file)
     orit_search(input, frag_txt_path, db_path, orit_out_path, orit_write_path, err_file)
-    # specialGeneSearch(input, mob_out_path, rep_out_path, con_out_path, mob_write_path, rep_write_path, con_write_path, db_path)
+    # special_gene_search(input,frag_txt_path, mob_out_path, rep_out_path, con_out_path, mob_write_path, rep_write_path, con_write_path, db_path, err_file)
+
+    if(n%10 == 0):
+        update_progress_bar(progress_bar, 10)
 
     if(int(log(n, 2)) == log(n, 2)):
         with open(log_file, 'a') as fout:
             fout.write(f"{timestamp()} Completed writing plasmid file {n}\n")
 
 def chrom_worker(
-    input, k, frag_path, frag_txt_path, 
+    input, k, frag_path, frag_txt_path,
     kmer_write_path, kmer_out_path,
-    circ_write_path, 
+    circ_write_path,
     db_path, inc_out_path, inc_write_path,
     rrna_out_path, rrna_write_path,
     orit_out_path, orit_write_path,
-    err_file, log_file):
+    mob_out_path, rep_out_path, con_out_path, mob_write_path, rep_write_path, con_write_path,
+    progress_bar, err_file, log_file):
 
     n, frag = input
 
     write_chrom_frags(input, frag_path, frag_txt_path, err_file, log_file)
-    # count_kmers(k, input, frag_txt_path, kmer_write_path, kmer_out_path, err_file)
-    # circularity(input, circ_write_path, err_file)
-    # inc_factor(input, db_path, frag_txt_path, inc_out_path, inc_write_path, err_file)
+    count_kmers(k, input, frag_txt_path, kmer_write_path, kmer_out_path, err_file)
+    circularity(input, circ_write_path, err_file)
+    inc_factor(input, db_path, frag_txt_path, inc_out_path, inc_write_path, err_file)
     rRNA_search(input, frag_txt_path, rrna_out_path, rrna_write_path, db_path, err_file)
     orit_search(input, frag_txt_path, db_path, orit_out_path, orit_write_path, err_file)
+    # special_gene_search(input,frag_txt_path, mob_out_path, rep_out_path, con_out_path, mob_write_path, rep_write_path, con_write_path, db_path, err_file)
+
+    if(n%10 == 0):
+        update_progress_bar(progress_bar, 10)
 
     if(int(log(n, 2)) == log(n, 2)):
         with open(log_file, 'a') as fout:
@@ -142,6 +151,9 @@ def process():
 
     chrom_frag_gen_c = filter(lambda x: x["type"] == "chromosome", chrom_frag_gen)
     chrom_frag_gen_p = filter(lambda x: x["type"] == "plasmid", chrom_frag_gen)
+
+    plas_bar, chrom_bar, ex_plas_bar = create_progress_bars()
+
     with concurrent.futures.ThreadPoolExecutor(max_workers=thread_count) as executor:
         try:
             executor.map(
@@ -153,6 +165,7 @@ def process():
                 repeat(plas_orit_out_path), repeat(plas_orit_write_path),
                 repeat(plas_mob_out_path), repeat(plas_rep_out_path), repeat(plas_con_out_path), 
                 repeat(plas_mob_write_path), repeat(plas_rep_write_path), repeat(plas_con_write_path),
+                repeat(plas_bar),
                 repeat(err_file), repeat(log_file))
         except Exception as err:
             with open(err_file, 'a') as fout:
@@ -166,6 +179,9 @@ def process():
                 repeat(db_path), repeat(chrom_inc_out_path), repeat(chrom_inc_write_path),
                 repeat(chrom_rrna_out_path), repeat(chrom_rrna_write_path),
                 repeat(chrom_orit_out_path), repeat(chrom_orit_write_path),
+                repeat(chrom_mob_out_path), repeat(chrom_rep_out_path), repeat(chrom_con_out_path), 
+                repeat(chrom_mob_write_path), repeat(chrom_rep_write_path), repeat(chrom_con_write_path),
+                repeat(chrom_bar),
                 repeat(err_file), repeat(log_file))
         except Exception as err:
             with open(err_file, 'a') as fout:
@@ -178,6 +194,9 @@ def process():
             repeat(db_path), repeat(chrom_inc_out_path), repeat(chrom_inc_write_path),
             repeat(ex_plas_rrna_out_path), repeat(ex_plas_rrna_write_path),
             repeat(ex_plas_orit_out_path), repeat(ex_plas_orit_write_path),
+            repeat(ex_plas_mob_out_path), repeat(ex_plas_rep_out_path), repeat(ex_plas_con_out_path), 
+            repeat(ex_plas_mob_write_path), repeat(ex_plas_rep_write_path), repeat(ex_plas_con_write_path),
+            repeat(ex_plas_bar),
             repeat(err_file), repeat(log_file))
         except Exception as err:
             with open(err_file, 'a') as fout:

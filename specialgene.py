@@ -1,4 +1,6 @@
 import subprocess as sp
+import csv
+
 from helpers import timestamp
 
 def special_gene_search(
@@ -37,6 +39,21 @@ def special_gene_search(
             stderr=sp.PIPE,
             universal_newlines=True
         )
+
+        tsvfile = open(mob_out_file)
+        fh = csv.reader(tsvfile, delimiter="\t")
+        lengths = []
+        bitscores = []
+        count = 0
+
+        for line in fh:
+            # if(line[0][0] != '#'):
+                print(line)
+                # cols = line[0].strip().split()
+                # lengths.append(abs(int(cols[8])- int(cols[7])))
+                # bitscores.append(float(cols[14]))
+                # count+=1
+        tsvfile.close()
     
     except Exception as err:
         with open(err_file, 'a') as fout:
