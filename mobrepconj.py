@@ -1,4 +1,5 @@
 import subprocess as sp
+from helpers import timestamp
 
 def special_gene_search(
     input, input_path, mob_out_path, rep_out_path, con_out_path, mob_write_path, 
@@ -38,6 +39,5 @@ def special_gene_search(
         )
     
     except Exception as err:
-        print("Error calculating protein factor for file:"+n+" "+str(err))
         with open(err_file, 'a') as fout:
-            fout.write("Error calculating rrna factor for file:"+n+" "+str(err)+"\n")
+            fout.write(f"{timestamp()} Error calculating rrna factor for file:{n} {err}\n")

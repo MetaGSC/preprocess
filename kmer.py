@@ -1,5 +1,6 @@
 import gzip
 import subprocess as sp
+from helpers import timestamp
 
 def count_kmers(k, input, input_path, write_path, out_path, err_file):
     try:
@@ -23,6 +24,5 @@ def count_kmers(k, input, input_path, write_path, out_path, err_file):
             with open(kmer_out_file, 'rb') as fin:
                 fout.write(fin.read())
     except Exception as err:
-        print("Error using seq2vec for file:"+input_file+" "+str(err))
         with open(err_file, 'a') as fout:
-            fout.write("Error using seq2vec for file "+input_file+" "+str(err)+"\n")
+            fout.write(f"{timestamp()} Error using seq2vec for file {n} {err}\n")

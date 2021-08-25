@@ -1,5 +1,6 @@
 import gzip
 import subprocess as sp
+from helpers import timestamp
 
 def checkCircularity(record, split_path, out_path):
     id = record.id
@@ -64,65 +65,5 @@ def circularity(input, write_path, err_file):
         with gzip.open(f"{write_path}/{n}.gz", mode='wt') as fout:
             fout.write(str(frag["circular"]))
     except Exception as err:
-        print("Error using nucmer for file:"+n+" "+str(err))
         with open(err_file, 'a') as fout:
-            fout.write("Error using nucmer for file "+n+" "+str(err)+"\n")
-
-# def circularity(input, split_path, out_path, result_path):
-#     n, frag = input
-#     frag_mid = int(len(frag["seq"])/2)
-#     seq_a = frag["seq"][:frag_mid]
-#     seq_b = frag["seq"][frag_mid:]
-    
-#     seq_a_path = f'{split_path}/{n}_a'
-#     seq_b_path = f'{split_path}/{n}_b'
-#     with open(seq_a_path, mode='w+') as fout:
-#         fout.write(f'>{frag["id"]}_a\n')
-#         fout.write(seq_a + '\n ')
-    
-#     with open(seq_b_path, mode='w+') as fout:
-#         fout.write(f'>{frag["id"]}_b\n')
-#         fout.write(seq_b + '\n ')
-
-#     out_file = f"{out_path}/{n}"
-#     cmd = [
-#     'nucmer',
-#     '-f',  # only forward strand
-#     '-l', '40',  # increase min match length to 40 bp
-#     '-p', out_file,
-#     seq_a_path,
-#     seq_b_path
-#     ]
-#     proc = sp.run(
-#         cmd,
-#         stdout=sp.PIPE,
-#         stderr=sp.PIPE,
-#         universal_newlines=True,
-#     )
-#     circular = 0
-#     has_match = False
-#     if(proc.returncode == 0):
-#         with open(f"{out_file}.delta", ) as fout:
-#             for line in fout:
-#                 line = line.rstrip()
-#                 if(line[0] == '>'):
-#                     has_match = True
-#                 elif(has_match):
-#                     cols = line.split(' ')
-#                     if(len(cols) == 7):
-#                         start_b = int(cols[0])
-#                         end_b = int(cols[1])
-#                         start_a = int(cols[2])
-#                         end_a =   int(cols[3])
-#                         mismatches = int(cols[4])
-#                         alignment_a = end_a - start_a + 1
-#                         alignment_b = end_b - start_b + 1
-#                         if(alignment_a == alignment_b
-#                                 and alignment_a > 100
-#                                 and (mismatches / alignment_a) < 0.05
-#                                 and end_b == len(seq_b)
-#                                 and start_a == 1):
-#                             circular = 1
-#                             print("Circular!!")
-#     with gzip.open(f"{result_path}/{n}.gz", mode='wt') as fout:
-#         fout.write(str(circular))
+            fout.write(f"{timestamp()} Error using nucmer for file {n} {err}\n")

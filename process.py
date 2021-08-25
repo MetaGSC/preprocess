@@ -7,10 +7,10 @@ import os.path
 from itertools import repeat
 import subprocess as sp
 from pathlib import Path
-from math import log10
+from math import log
 
 from constants import *
-from helpers import createFileStructure
+from helpers import createFileStructure, timestamp
 from circular import checkCircularity, circularity
 from kmer import count_kmers
 from inc_fac import inc_factor
@@ -32,7 +32,7 @@ def plas_frag_generator(dir_path, frag_len, split_path, out_path, coverage, err_
                     yield {"id":record.description, "seq":str(record.seq)[rand_i:rand_i+min(frag_len, length)], "circular": circular}
         except Exception as err:
             with open(err_file, 'a') as fout:
-                fout.write(f"Error reading plasmid file {filename}: {err}\n")
+                fout.write(f"{timestamp()} Error reading plasmid file {filename}: {err}\n")
 
 def chrom_frag_generator(dir_path, frag_len, split_path, out_path, coverage, err_file):
     for filename in os.listdir(dir_path):
@@ -58,7 +58,7 @@ def chrom_frag_generator(dir_path, frag_len, split_path, out_path, coverage, err
                             }
         except Exception as err:
             with open(err_file, 'a') as fout:
-                fout.write(f"Error reading chromosome file {filename}: {err}, {len(record)}\n")
+                fout.write(f"{timestamp()} Error reading chromosome file {filename}: {err}, {len(record)}\n")
 
 def write_plas_frags(input, path, txt_path, err_file, log_file):
     n, frag = input
@@ -71,7 +71,7 @@ def write_plas_frags(input, path, txt_path, err_file, log_file):
             
     except Exception as err:
         with open(err_file, 'a') as fout:
-            fout.write(f"Error writing plasmid file {n}: {err}\n")
+            fout.write(f"{timestamp()} Error writing plasmid file {n}: {err}\n")
 
 def write_chrom_frags(input, path, txt_path, err_file, log_file):
     n, frag = input
@@ -82,9 +82,8 @@ def write_chrom_frags(input, path, txt_path, err_file, log_file):
             with open(f'{txt_path}/{n}', 'w') as fout:
                 fout.write(f'>{n} {frag["name"]} {frag["id"]}\n{frag["seq"]}\n')
     except Exception as err:
-        print("Error writing file "+n)
         with open(err_file, 'a') as fout:
-            fout.write(f"Error writing chromosome file {n}: {err}\n")
+            fout.write(f"{timestamp()} Error writing chromosome file {n}: {err}\n")
 
 def plasmid_worker(
     input, k, frag_path, frag_txt_path, 
@@ -106,9 +105,9 @@ def plasmid_worker(
     orit_search(input, frag_txt_path, db_path, orit_out_path, orit_write_path, err_file)
     # specialGeneSearch(input, mob_out_path, rep_out_path, con_out_path, mob_write_path, rep_write_path, con_write_path, db_path)
 
-    if(int(log10(n)) == log10(n)):
+    if(int(log(n, 2)) == log(n, 2)):
         with open(log_file, 'a') as fout:
-            fout.write(f"Completed writing plasmid file {n}\n")
+            fout.write(f"{timestamp()} Completed writing plasmid file {n}\n")
 
 def chrom_worker(
     input, k, frag_path, frag_txt_path, 
@@ -128,9 +127,9 @@ def chrom_worker(
     rRNA_search(input, frag_txt_path, rrna_out_path, rrna_write_path, db_path, err_file)
     orit_search(input, frag_txt_path, db_path, orit_out_path, orit_write_path, err_file)
 
-    if(int(log10(n)) == log10(n)):
+    if(int(log(n, 2)) == log(n, 2)):
         with open(log_file, 'a') as fout:
-            fout.write(f"Completed writing chromosome file {n}\n")
+            fout.write(f"{timestamp()} Completed writing chromosome file {n}\n")
 
 def process():
     
@@ -156,9 +155,8 @@ def process():
                 repeat(plas_mob_write_path), repeat(plas_rep_write_path), repeat(plas_con_write_path),
                 repeat(err_file), repeat(log_file))
         except Exception as err:
-            print("Concurrency Error: Plasmid: "+str(err))
             with open(err_file, 'a') as fout:
-                fout.write(f"Concurrency Error: {err}\n")
+                fout.write(f"{timestamp()} Concurrency Error: {err}\n")
 
         try:
             executor.map(
@@ -170,9 +168,8 @@ def process():
                 repeat(chrom_orit_out_path), repeat(chrom_orit_write_path),
                 repeat(err_file), repeat(log_file))
         except Exception as err:
-            print("Concurrency Error: Chromosome: "+str(err))
             with open(err_file, 'a') as fout:
-                fout.write(f"Concurrency Error: {err}\n")
+                fout.write(f"{timestamp()} Concurrency Error: {err}\n")
 
         try:
             executor.map(chrom_worker, enumerate(chrom_frag_gen_p), repeat(k), repeat(extra_plasmid_write_path), repeat(extra_plasmid_txt_write_path), 
@@ -183,10 +180,8 @@ def process():
             repeat(ex_plas_orit_out_path), repeat(ex_plas_orit_write_path),
             repeat(err_file), repeat(log_file))
         except Exception as err:
-            print("Concurrency Error: Extra Plasmid: "+str(err))
             with open(err_file, 'a') as fout:
-                fout.write(f"Concurrency Error: {err}\n")
-
+                fout.write(f"{timestamp()} Concurrency Error: {err}\n")
 
 if __name__ == "__main__":
     process()

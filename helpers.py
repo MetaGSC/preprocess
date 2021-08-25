@@ -6,6 +6,10 @@ def find_mean(data):
     return 0
   return float(sum(data))/len(data)
 
+def timestamp():
+    import datetime
+    return datetime.datetime.now().strftime("[%Y-%m-%d %H:%M:%S]")
+
 def createDirIfNeeded(path):
     if not os.path.exists(path):
         os.makedirs(path)
@@ -97,4 +101,3 @@ def createFileStructure():
     createDirIfNeeded(plas_con_write_path)
     createDirIfNeeded(chrom_con_write_path)
     createDirIfNeeded(ex_plas_con_write_path)
-

@@ -2,7 +2,7 @@ import subprocess as sp
 import gzip
 import csv
 
-from helpers import find_mean
+from helpers import find_mean, timestamp
 
 def orit_search(input, input_path, db_path, out_path, write_path, err_file):
     try:
@@ -55,6 +55,5 @@ def orit_search(input, input_path, db_path, out_path, write_path, err_file):
             fout.write(f"{identity_mean}\t{coverage_mean}\t{length_mean}\t{count}\n")
 
     except Exception as err:
-        print("Error calculating oriT factor for file:"+n+" "+str(err))
         with open(err_file, 'a') as fout:
-            fout.write("Error calculating oriT factor for file:"+n+" "+str(err)+"\n")
+            fout.write(f"{timestamp()} Error calculating oriT factor for file:{n} {err}\n")

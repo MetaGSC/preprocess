@@ -2,7 +2,7 @@ import subprocess as sp
 import gzip
 import csv
 
-from helpers import find_mean
+from helpers import find_mean, timestamp
 
 def rRNA_search(input, input_path, out_path, write_path, db_path, err_file):
     try:
@@ -45,6 +45,5 @@ def rRNA_search(input, input_path, out_path, write_path, db_path, err_file):
         with gzip.open(f"{write_path}/{n}.gz", mode='wt') as fout:
             fout.write(f"{bitscore_mean}\t{length_mean}\t{count}\n")
     except Exception as err:
-        print("Error calculating rrna factor for file:"+n+" "+str(err))
         with open(err_file, 'a') as fout:
-            fout.write("Error calculating rrna factor for file:"+n+" "+str(err)+"\n")
+            fout.write(f"{timestamp()} Error calculating rrna factor for file:{n} {err}\n")

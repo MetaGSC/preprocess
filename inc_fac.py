@@ -2,7 +2,7 @@ import gzip
 import subprocess as sp
 import os
 
-from helpers import find_mean
+from helpers import find_mean, timestamp
 
 def inc_factor(input, db_path, input_path, out_path, result_path, err_file):
     try:
@@ -65,10 +65,8 @@ def inc_factor(input, db_path, input_path, out_path, result_path, err_file):
             bitscore_mean = find_mean(bitscores)
             coverage_mean = find_mean(coverages)
             length_mean = find_mean(lengths)
-            print("#1")
         with gzip.open(f"{result_path}/{n}.gz", mode='wt') as fout:
             fout.write(f"{bitscore_mean}\t{coverage_mean}\t{length_mean}\t{count}\n")
     except Exception as err:
-        print("Error calculating inc. factor for file:"+n+" "+str(err))
         with open(err_file, 'a') as fout:
-            fout.write("Error calculating inc. factor for file:"+n+" "+str(err)+"\n")
+            fout.write(f"{timestamp()} Error calculating inc. factor for file:{n} {err}\n")
