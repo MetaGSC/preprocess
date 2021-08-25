@@ -1,8 +1,9 @@
 import gzip
 import subprocess as sp
+
 from helpers import timestamp
 
-def checkCircularity(record, split_path, out_path):
+def check_circularity(record, split_path, out_path):
     id = record.id
     seq_mid = int(len(record.seq)/2)
     seq_a = str(record.seq[:seq_mid])

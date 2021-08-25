@@ -4,7 +4,7 @@ import csv
 
 from helpers import find_mean, timestamp
 
-def rRNA_search(input, input_path, out_path, write_path, db_path, err_file):
+def rrna_search(input, input_path, out_path, write_path, db_path, err_file):
     try:
         n, frag = input
         input_file = f'{input_path}/{n}'

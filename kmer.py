@@ -1,5 +1,6 @@
 import gzip
 import subprocess as sp
+
 from helpers import timestamp
 
 def count_kmers(k, input, input_path, write_path, out_path, err_file):

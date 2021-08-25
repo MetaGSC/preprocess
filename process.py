@@ -11,11 +11,11 @@ from math import log
 
 from progress_bar import create_progress_bars, update_progress_bar
 from constants import *
-from helpers import createFileStructure, timestamp
-from circular import checkCircularity, circularity
+from helpers import create_file_structure, timestamp
+from circular import check_circularity, circularity
 from kmer import count_kmers
 from inc_fac import inc_factor
-from rrna import rRNA_search
+from rrna import rrna_search
 from orit import orit_search
 from specialgene import special_gene_search
     
@@ -23,7 +23,7 @@ def plas_frag_generator(dir_path, frag_len, split_path, out_path, coverage, err_
     for filename in os.listdir(dir_path):
         try:
             for record in SeqIO.parse(f"{dir_path}/{filename}", 'fasta'):
-                circular = checkCircularity(record, split_path, out_path)
+                circular = check_circularity(record, split_path, out_path)
                 length = len(record.seq)
                 for _ in range(int(length*coverage/frag_len)):
                     if(length<frag_len):
@@ -42,7 +42,7 @@ def chrom_frag_generator(dir_path, frag_len, split_path, out_path, coverage, err
             name = file_comp[0]+"_"+file_comp[1]
             with gzip.open(f"{dir_path}/{filename}", "rt") as handle:
                 for record in SeqIO.parse(handle, 'fasta'):
-                    circular = checkCircularity(record, split_path, out_path)
+                    circular = check_circularity(record, split_path, out_path)
                     length = len(record.seq)
                     if("plasmid" in record.description): 
                         type = "plasmid"
@@ -102,7 +102,7 @@ def plasmid_worker(
     count_kmers(k, input, frag_txt_path, kmer_write_path, kmer_out_path, err_file)
     circularity(input, circ_write_path, err_file)
     inc_factor(input, db_path, frag_txt_path, inc_out_path, inc_write_path, err_file)
-    rRNA_search(input, frag_txt_path, rrna_out_path, rrna_write_path, db_path, err_file)
+    rrna_search(input, frag_txt_path, rrna_out_path, rrna_write_path, db_path, err_file)
     orit_search(input, frag_txt_path, db_path, orit_out_path, orit_write_path, err_file)
     # special_gene_search(input,frag_txt_path, mob_out_path, rep_out_path, con_out_path, mob_write_path, rep_write_path, con_write_path, db_path, err_file)
 
@@ -129,7 +129,7 @@ def chrom_worker(
     count_kmers(k, input, frag_txt_path, kmer_write_path, kmer_out_path, err_file)
     circularity(input, circ_write_path, err_file)
     inc_factor(input, db_path, frag_txt_path, inc_out_path, inc_write_path, err_file)
-    rRNA_search(input, frag_txt_path, rrna_out_path, rrna_write_path, db_path, err_file)
+    rrna_search(input, frag_txt_path, rrna_out_path, rrna_write_path, db_path, err_file)
     orit_search(input, frag_txt_path, db_path, orit_out_path, orit_write_path, err_file)
     # special_gene_search(input,frag_txt_path, mob_out_path, rep_out_path, con_out_path, mob_write_path, rep_write_path, con_write_path, db_path, err_file)
 
@@ -143,8 +143,8 @@ def chrom_worker(
 def process():
     
     ## create file structure
-    createFileStructure()
-   
+    create_file_structure()
+
     ## read and write plasmid/ chromosome files
     plas_frag_gen = plas_frag_generator(plas_db_path, frag_len, plas_frag_split_path, plas_circ_out_path, coverage, err_file)
     chrom_frag_gen = chrom_frag_generator(chrom_db_path, frag_len, chrom_frag_split_path, chrom_circ_out_path, coverage, err_file)
