@@ -6,6 +6,8 @@ def write_file_id(input, target_path, err_file):
     try:
         n, frag = input
         data = [n, frag["id"].strip().split()[0]]
+        if("name" in frag.keys()):
+            data.append(frag["name"])
 
         with open(target_path, "a", encoding='UTF8') as f:
             writer = csv.writer(f)
