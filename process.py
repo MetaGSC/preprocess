@@ -18,6 +18,7 @@ from inc_fac import inc_factor
 from rrna import rrna_search
 from orit import orit_search
 from specialgene import special_gene_search
+from write_file_id import write_file_id
     
 def plas_frag_generator(dir_path, frag_len, split_path, out_path, coverage, err_file):
     for filename in os.listdir(dir_path):
@@ -88,6 +89,7 @@ def write_chrom_frags(input, path, txt_path, err_file, log_file):
 
 def plasmid_worker(
     input, k, frag_path, frag_txt_path, 
+    target_path,
     kmer_write_path, kmer_out_path,
     circ_write_path, 
     db_path, inc_out_path, inc_write_path,
@@ -99,6 +101,7 @@ def plasmid_worker(
     n, frag = input
 
     write_plas_frags(input, frag_path, frag_txt_path, err_file, log_file)
+    write_file_id(input, target_path, err_file)
     count_kmers(k, input, frag_txt_path, kmer_write_path, kmer_out_path, err_file)
     circularity(input, circ_write_path, err_file)
     inc_factor(input, db_path, frag_txt_path, inc_out_path, inc_write_path, err_file)
@@ -115,17 +118,19 @@ def plasmid_worker(
 
 def chrom_worker(
     input, k, frag_path, frag_txt_path,
+    target_path,
     kmer_write_path, kmer_out_path,
     circ_write_path,
     db_path, inc_out_path, inc_write_path,
     rrna_out_path, rrna_write_path,
     orit_out_path, orit_write_path,
-    mob_out_path, rep_out_path, con_out_path, mob_write_path, rep_write_path, con_write_path,
+    mob_out_path, rep_out_path, con_out_path, mob_wchrom_mob_out_pathrite_path, rep_write_path, con_write_path,
     progress_bar, err_file, log_file):
 
     n, frag = input
 
     write_chrom_frags(input, frag_path, frag_txt_path, err_file, log_file)
+    write_file_id(input, target_path, err_file)
     count_kmers(k, input, frag_txt_path, kmer_write_path, kmer_out_path, err_file)
     circularity(input, circ_write_path, err_file)
     inc_factor(input, db_path, frag_txt_path, inc_out_path, inc_write_path, err_file)
@@ -157,7 +162,8 @@ def process():
     with concurrent.futures.ThreadPoolExecutor(max_workers=thread_count) as executor:
         try:
             executor.map(
-                plasmid_worker, enumerate(plas_frag_gen), repeat(k), repeat(plas_write_path), repeat(plas_txt_write_path), 
+                plasmid_worker, enumerate(plas_frag_gen), repeat(k), repeat(plas_write_path), repeat(plas_txt_write_path),
+                repeat(plas_target_path),
                 repeat(plas_7mer_write_path), repeat(plas_7mer_out_path),
                 repeat(plas_circ_write_path),
                 repeat(db_path), repeat(plas_inc_out_path), repeat(plas_inc_write_path),
@@ -174,6 +180,7 @@ def process():
         try:
             executor.map(
                 chrom_worker, enumerate(chrom_frag_gen_c), repeat(k), repeat(chrom_write_path), repeat(chrom_txt_write_path), 
+                repeat(chrom_target_path),
                 repeat(chrom_7mer_write_path), repeat(chrom_7mer_out_path),
                 repeat(chrom_circ_write_path),
                 repeat(db_path), repeat(chrom_inc_out_path), repeat(chrom_inc_write_path),
@@ -189,6 +196,7 @@ def process():
 
         try:
             executor.map(chrom_worker, enumerate(chrom_frag_gen_p), repeat(k), repeat(extra_plasmid_write_path), repeat(extra_plasmid_txt_write_path), 
+            repeat(ex_plas_target_path),
             repeat(ex_plas_7mer_write_path), repeat(ex_plas_7mer_out_path),
             repeat(ex_plas_circ_write_path),
             repeat(db_path), repeat(chrom_inc_out_path), repeat(chrom_inc_write_path),

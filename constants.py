@@ -8,14 +8,23 @@ log_file = "log.txt"
 # Databases
 # plas_db_path = "../databases/DNA-ML_FYP_2021/plasmid_refs"
 # chrom_db_path = '../databases/DNA-ML_FYP_2021/bacterial_references'
-plas_db_path = "../../databases/DNA-ML_FYP_2021/plas-ref-small"
+plas_db_path = "../../databases/DNA-ML_FYP_2021/plas-ref-tiny"
 chrom_db_path = '../../databases/DNA-ML_FYP_2021/bact-ref-tiny'
 db_path = "../../references/biomarkerdbs"
+cmscan_path = "cmscan"
+blastn_path = "blastn"
+seq2vec_path = "seq2vec"
+nucmer_path = "nucmer"
 
 # label files 
 plas_label_path = "results/plasmid/Label"
 chrom_label_path = "results/chromosome/Label"
 ex_plas_label_path = "results/extra-plasmid/Label"
+
+# target csv files
+plas_target_path = "results/plasmid/target.csv"
+chrom_target_path = "results/chromosome/target.csv"
+ex_plas_target_path = "results/extra-plasmid/target.csv"
 
 # fragment files
 plas_write_path = "results/plasmid/Data/fragments"

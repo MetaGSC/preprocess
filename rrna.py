@@ -3,6 +3,7 @@ import gzip
 import csv
 
 from helpers import find_mean, timestamp
+from constants import cmscan_path
 
 def rrna_search(input, input_path, out_path, write_path, db_path, err_file):
     try:
@@ -12,7 +13,7 @@ def rrna_search(input, input_path, out_path, write_path, db_path, err_file):
         db_file = f"{db_path}/rRNA"
 
         cmd = [
-            'cmscan',
+            cmscan_path,
             '--noali',
             '--cut_tc',
             '--cpu', '1',

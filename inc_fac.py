@@ -3,6 +3,7 @@ import subprocess as sp
 import os
 
 from helpers import find_mean, timestamp
+from constants import blastn_path
 
 def inc_factor(input, db_path, input_path, out_path, result_path, err_file):
     try:
@@ -11,8 +12,9 @@ def inc_factor(input, db_path, input_path, out_path, result_path, err_file):
         out_file = f"{out_path}/{n}.inc.blast.out"
 
         db_file = f"{db_path}/inc-types.fasta"
+
         cmd = [
-            'blastn',
+            blastn_path,
             '-query', db_file,
             '-subject', input_file,
             '-num_threads', '1',    

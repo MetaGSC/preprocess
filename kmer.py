@@ -2,6 +2,7 @@ import gzip
 import subprocess as sp
 
 from helpers import timestamp
+from constants import seq2vec_path
 
 def count_kmers(k, input, input_path, write_path, out_path, err_file):
     try:
@@ -10,11 +11,8 @@ def count_kmers(k, input, input_path, write_path, out_path, err_file):
         kmer_out_file = f'{out_path}/{n}'
         write_file = f"{write_path}/{n}"
 
-        # with gzip.open(f'{input_path}.gz', 'rb') as fin:
-        #     with open(temp_in, 'wb') as fout:
-        #         fout.write(fin.read())
         args = [
-            'seq2vec',
+            seq2vec_path,
             '-f', str(input_file),
             '-o', str(kmer_out_file),
             '-t', '8',

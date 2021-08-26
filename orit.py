@@ -1,8 +1,8 @@
 import subprocess as sp
 import gzip
-import csv
 
 from helpers import find_mean, timestamp
+from constants import blastn_path
 
 def orit_search(input, input_path, db_path, out_path, write_path, err_file):
     try:
@@ -13,7 +13,7 @@ def orit_search(input, input_path, db_path, out_path, write_path, err_file):
         write_file = f'{write_path}/{n}'
 
         cmd = [
-            'blastn',
+            blastn_path,
             '-query', str(input_file),
             '-db', str(db_file),
             '-num_threads', '1',

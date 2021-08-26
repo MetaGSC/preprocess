@@ -2,6 +2,7 @@ import gzip
 import subprocess as sp
 
 from helpers import timestamp
+from constants import nucmer_path
 
 def check_circularity(record, split_path, out_path):
     id = record.id
@@ -20,8 +21,9 @@ def check_circularity(record, split_path, out_path):
         fout.write(seq_b + '\n ')
 
     out_file = f"{out_path}/{id}"
+
     cmd = [
-    'nucmer',
+    nucmer_path,
     '-f',  # only forward strand
     '-l', '40',  # increase min match length to 40 bp
     '-p', out_file,
