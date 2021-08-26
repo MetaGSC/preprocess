@@ -1,4 +1,5 @@
 thread_count = 8
+batch_size = 1000
 frag_len = 5000
 coverage = 2
 k = 7
