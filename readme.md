@@ -17,35 +17,24 @@ Following tools should be installed.
 -   **tqdm** - used to display runtime progress
  
 ### Infernal (rRNA) - [github link](https://github.com/EddyRivasLab/infernal)
- 
+
+```
+sudo apt-get install infernal
+```
+
+IF the above command does not install version (1.1.3-4) please use the following command set.
+
+[OPTIONAL]
 ```
 wget eddylab.org/infernal/infernal-1.1.4.tar.gz
-```
-```
-tar xf infernal-1.1.4.tar.gz
-```
-```    
+tar xf infernal-1.1.4.tar.gz  
 cd infernal-1.1.4
-```
-```
 ./configure
-```
-```
 make
-```
-```
 make install
-```
-```
 cd easel
-```
-```
 make install
-```
-```
 cmscan
-```
-```
 chmod 777  '/infernal-1.1.4/src/cmscan.c'
 ```
 
