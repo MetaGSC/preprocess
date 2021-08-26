@@ -1,4 +1,3 @@
-import gzip
 import subprocess as sp
 import os
 
@@ -37,7 +36,7 @@ def inc_factor(input, db_path, input_path, out_path, result_path, err_file):
             hit_poses = []
             count = 0
 
-            with out_file.open() as fh:
+            with open(out_file) as fh:
                 for line in fh:
                     cols = line.rstrip().split('\t')
 
@@ -67,7 +66,7 @@ def inc_factor(input, db_path, input_path, out_path, result_path, err_file):
             bitscore_mean = find_mean(bitscores)
             coverage_mean = find_mean(coverages)
             length_mean = find_mean(lengths)
-        with gzip.open(f"{result_path}/{n}.gz", mode='wt') as fout:
+        with open(f"{result_path}/{n}", 'w+') as fout:
             fout.write(f"{bitscore_mean}\t{coverage_mean}\t{length_mean}\t{count}\n")
     except Exception as err:
         with open(err_file, 'a') as fout:

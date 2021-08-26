@@ -43,7 +43,7 @@ def rrna_search(input, input_path, out_path, write_path, db_path, err_file):
         
         bitscore_mean = find_mean(bitscores)
         length_mean = find_mean(lengths)
-        with gzip.open(f"{write_path}/{n}.gz", mode='wt') as fout:
+        with open(f"{write_path}/{n}", 'w+') as fout:
             fout.write(f"{bitscore_mean}\t{length_mean}\t{count}\n")
     except Exception as err:
         with open(err_file, 'a') as fout:

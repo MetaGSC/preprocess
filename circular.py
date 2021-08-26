@@ -1,4 +1,3 @@
-import gzip
 import subprocess as sp
 
 from helpers import timestamp
@@ -65,7 +64,7 @@ def check_circularity(record, split_path, out_path):
 def circularity(input, write_path, err_file):
     try:
         n, frag = input
-        with gzip.open(f"{write_path}/{n}.gz", mode='wt') as fout:
+        with open(f"{write_path}/{n}", 'w+') as fout:
             fout.write(str(frag["circular"]))
     except Exception as err:
         with open(err_file, 'a') as fout:

@@ -66,7 +66,7 @@ def write_plas_frags(input, path, txt_path, err_file, log_file):
     n, frag = input
     try:
         if (not os.path.isfile(f'{path}/{n}.gz')):
-            with gzip.open(f'{path}/{n}.gz', 'wt') as fout:
+            with open(f'{path}/{n}', 'w+') as fout:
                 fout.write(f'>{n} {frag["id"]}\n{frag["seq"]}\n')
             with open(f'{txt_path}/{n}', 'w') as fout:
                 fout.write(f'>{n} {frag["id"]}\n{frag["seq"]}\n')
@@ -78,8 +78,8 @@ def write_plas_frags(input, path, txt_path, err_file, log_file):
 def write_chrom_frags(input, path, txt_path, err_file, log_file):
     n, frag = input
     try:
-        if (not os.path.isfile(f'{path}/{n}.gz')):
-            with gzip.open(f'{path}/{n}.gz', 'wt') as fout:
+        if (not os.path.isfile(f'{path}/{n}')):
+            with open(f'{path}/{n}', 'w+') as fout:
                 fout.write(f'>{n} {frag["name"]} {frag["id"]}\n{frag["seq"]}\n')
             with open(f'{txt_path}/{n}', 'w') as fout:
                 fout.write(f'>{n} {frag["name"]} {frag["id"]}\n{frag["seq"]}\n')

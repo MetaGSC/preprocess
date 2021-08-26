@@ -1,5 +1,4 @@
 import subprocess as sp
-import gzip
 
 from helpers import find_mean, timestamp
 from constants import blastn_path
@@ -51,7 +50,7 @@ def orit_search(input, input_path, db_path, out_path, write_path, err_file):
         coverage_mean = find_mean(coverages)
         identity_mean = find_mean(identities)
 
-        with gzip.open(f"{write_file}.gz", mode='wt') as fout:
+        with open(f"{write_file}", 'w+') as fout:
             fout.write(f"{identity_mean}\t{coverage_mean}\t{length_mean}\t{count}\n")
 
     except Exception as err:
