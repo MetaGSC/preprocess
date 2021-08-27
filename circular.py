@@ -9,9 +9,6 @@ from constants import *
 from helpers import create_circ_dirs, find_mean
 
 def circularity(frag_path, split_path, out_path, write_path, progress_bar):
-
-    create_circ_dirs()
-
     for filename in os.listdir(frag_path):
         name = filename.split(".")[0]
         try:
@@ -26,11 +23,11 @@ def circularity(frag_path, split_path, out_path, write_path, progress_bar):
                 seq_b_file = f'{split_path}/_b'
                 with open(seq_a_file, mode='w+') as fout:
                     fout.write(f'>{n}_a\n')
-                    fout.write(seq_a + '\n ')
+                    fout.write(seq_a + '\n')
                 
                 with open(seq_b_file, mode='w+') as fout:
                     fout.write(f'>{n}_b\n')
-                    fout.write(seq_b + '\n ')
+                    fout.write(seq_b + '\n')
 
                 out_file = f"{out_path}/temp"
 
@@ -75,16 +72,13 @@ def circularity(frag_path, split_path, out_path, write_path, progress_bar):
                 find_mean(alignment_b_mean, count)
                 find_mean(mismatches_mean, count)
 
-                data = [n, alignment_a_mean, alignment_a_mean, mismatches_mean, count]
+                data = f"{n}\t{alignment_a_mean}\t{alignment_a_mean}\t{mismatches_mean}\t{count}\n"
                 batch.append(data)
                 if(n%10 == 0):
                     update_progress_bar(progress_bar, 10)
 
-            with open(f"{write_path}/{name}.csv", "a", encoding='UTF8') as f:
-                writer = csv.writer(f)
-                header = ['n', 'alignment_a_mean', 'alignment_b_mean', 'mismatches_mean', 'count']
-                writer.writerow(header)
-                writer.writerows(batch)
+            with open(f"{write_path}/{name}", "w") as f:
+                f.writelines(batch)
 
         except Exception as err:
             with open(err_file, 'a') as fout:
@@ -92,6 +86,7 @@ def circularity(frag_path, split_path, out_path, write_path, progress_bar):
 
 if __name__ == "__main__":
     plas_bar, chrom_bar, ex_plas_bar = create_progress_bars()
+    create_circ_dirs()
     circularity(plas_write_path, plas_frag_split_path, plas_circ_out_path, plas_circ_write_path, plas_bar)
     circularity(chrom_write_path, chrom_frag_split_path, chrom_circ_out_path, chrom_circ_write_path, chrom_bar)
     circularity(extra_plasmid_write_path, ex_plas_frag_split_path, ex_plas_circ_out_path, ex_plas_circ_write_path, ex_plas_bar)

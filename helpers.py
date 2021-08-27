@@ -38,6 +38,12 @@ def create_circ_dirs():
     create_dir_if_needed(plas_frag_split_path)
     create_dir_if_needed(chrom_frag_split_path)
     create_dir_if_needed(ex_plas_frag_split_path)
+
+def create_kmer_files():
+    # kmer files
+    create_dir_if_needed(plas_7mer_write_path)
+    create_dir_if_needed(chrom_7mer_write_path)
+    create_dir_if_needed(ex_plas_7mer_write_path)
     
 def create_file_structure():
     ## create dirs if they don't exist
@@ -61,10 +67,6 @@ def create_file_structure():
     create_dir_if_needed(plas_7mer_write_path)
     create_dir_if_needed(chrom_7mer_write_path)
     create_dir_if_needed(ex_plas_7mer_write_path)
-
-    create_dir_if_needed(plas_7mer_out_path)
-    create_dir_if_needed(chrom_7mer_out_path)
-    create_dir_if_needed(ex_plas_7mer_out_path)
 
     # circularity files
     create_dir_if_needed(plas_circ_write_path)
