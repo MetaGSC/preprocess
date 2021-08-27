@@ -104,7 +104,7 @@ def circ_worker(filename, frag_path, split_path, out_path, write_path, pb_i):
 def circularity(frag_path, split_path, out_path, write_path, progress_bar):
 
     file_list = os.listdir(frag_path)
-    executor = concurrent.futures.ProcessPoolExecutor(4)
+    executor = concurrent.futures.ProcessPoolExecutor(thread_count)
     futures = [
         # executor.submit(circ_worker, filename, frag_path, split_path, out_path, write_path, progress_bar) for filename in file_list
         executor.submit(circ_worker, filename, frag_path, split_path, out_path, write_path, progress_bar) for filename in file_list
