@@ -2,10 +2,10 @@ import os
 
 from constants import *
 
-def find_mean(data):
-  if len(data) == 0:
-    return 0
-  return float(sum(data))/len(data)
+def find_mean(sum, divisor):
+    if divisor == 0:
+        return 0
+    return float(sum)/divisor
 
 def timestamp():
     import datetime
@@ -15,12 +15,30 @@ def create_dir_if_needed(path):
     if not os.path.exists(path):
         os.makedirs(path)
 
+def delete_dir_if_exist(path):
+  if os.path.exists(path):
+    os.remove(path)
+
 def create_fragment_dirs():
     # fragments
     create_dir_if_needed(plas_write_path)
     create_dir_if_needed(chrom_write_path)
     create_dir_if_needed(extra_plasmid_write_path)
 
+def create_circ_dirs():
+     # circularity files
+    create_dir_if_needed(plas_circ_write_path)
+    create_dir_if_needed(chrom_circ_write_path)
+    create_dir_if_needed(ex_plas_circ_write_path)
+
+    create_dir_if_needed(plas_circ_out_path)
+    create_dir_if_needed(chrom_circ_out_path)
+    create_dir_if_needed(ex_plas_circ_out_path)
+
+    create_dir_if_needed(plas_frag_split_path)
+    create_dir_if_needed(chrom_frag_split_path)
+    create_dir_if_needed(ex_plas_frag_split_path)
+    
 def create_file_structure():
     ## create dirs if they don't exist
 

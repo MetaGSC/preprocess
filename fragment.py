@@ -53,7 +53,7 @@ def chrom_frag_generator(dir_path, frag_len, coverage, err_file):
 
 def write_plas_frags(batch_i, input_arr, frag_path, err_file):
     try:
-        with open(f'{frag_path}/{batch_i}', 'w+') as fout:
+        with open(f'{frag_path}/{batch_i}.fasta', 'w+') as fout:
             for n, frag in input_arr:
                 fout.write(f'>{n} {frag["id"]}\n{frag["seq"]}\n')
         write_file_id(batch_i, input_arr, plas_target_path, err_file)
@@ -63,7 +63,7 @@ def write_plas_frags(batch_i, input_arr, frag_path, err_file):
 
 def write_chrom_frags(batch_i, input_arr, frag_path, err_file):
     try:
-        with open(f'{frag_path}/{batch_i}', 'w+') as fout:
+        with open(f'{frag_path}/{batch_i}.fasta', 'w+') as fout:
             for n, frag in input_arr:
                 fout.write(f'>{n} {frag["name"]} {frag["id"]}\n{frag["seq"]}\n')
 
