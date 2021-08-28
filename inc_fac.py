@@ -1,73 +1,83 @@
 import subprocess as sp
 import os
+from Bio import SeqIO
 
-from helpers import find_mean, timestamp
-from constants import blastn_path
+from helpers import timestamp, create_inc_factor_dirs
+from progress_bar import create_progress_bars, update_progress_bar
+from constants import *
 
-def inc_factor(input, db_path, input_path, out_path, result_path, err_file):
+def inc_factor(frag_path, db_path, out_path, write_path, progress_bar):
     try:
-        n, frag = input
-        input_file = f'{input_path}/{n}'
-        out_file = f"{out_path}/{n}.inc.blast.out"
+        for filename in os.listdir(frag_path):
+            name = filename.split(".")[0]
+            input_file = f'{frag_path}/{name}.fasta'
+            out_file = f"{out_path}/_temp.inc.blast.out"
+            write_file = f'{write_path}/{name}'
+            db_file = f"{db_path}/inc-types.fasta"
 
-        db_file = f"{db_path}/inc-types.fasta"
+            cmd = [
+                blastn_path,
+                '-query', db_file,
+                '-subject', input_file,
+                '-num_threads', str(thread_count),    
+                '-perc_identity', '90',
+                '-culling_limit', '1',
+                '-outfmt', '6 qseqid sseqid pident length bitscore',
+                '-out', out_file,
+            ]
+            proc = sp.run(
+                cmd,
+                stdout=sp.PIPE,
+                stderr=sp.PIPE,
+                universal_newlines=True
+            )
 
-        cmd = [
-            blastn_path,
-            '-query', db_file,
-            '-subject', input_file,
-            '-num_threads', '1',    
-            '-perc_identity', '90',
-            '-culling_limit', '1',
-            '-outfmt', '6 qseqid sstart send sstrand pident qcovs bitscore',
-            '-out', out_file,
-        ]
-        proc = sp.run(
-            cmd,
-            stdout=sp.PIPE,
-            stderr=sp.PIPE,
-            universal_newlines=True
-        )
-        bitscore_mean, coverage_mean, length_mean, count = 0, 0, 0, 0
-        if(proc.returncode == 0 and not os.stat(out_file).st_size == 0):
-            bitscores = []
-            coverages = []
-            lengths = []
-            hit_poses = []
-            count = 0
+            matches = {}
+            if proc.returncode == 0:
+                with open(out_file, 'r') as fh:
+                    for line in fh:
+                        line = line.rstrip()
+                        cols = line.split('\t')
+                        n = int(cols[1])
+                        identity = float(cols[2])
+                        length = int(cols[3])
+                        bitscore = float(cols[4])
 
-            with open(out_file) as fh:
-                for line in fh:
-                    cols = line.rstrip().split('\t')
-
-                    start = int(cols[1])
-                    end = int(cols[2])
-                    length = abs(end - start) + 1
-
-                    strand = '+' if cols[3] == 'plus' else '-',
-                    coverage = float(cols[5]) / 100
-                    bitscore = float(cols[6])
-
-                    hit_pos = end if strand == '+' else start
-                    
-                    if (hit_pos in hit_poses):
-                        former_hit = hit_poses.index(hit_pos)
-                        if (bitscores[former_hit] < bitscore):
-                            bitscores[former_hit] = bitscore
-                            coverages[former_hit] = coverage
-                            lengths[former_hit] = length
-                            count+=1
+                        if n in matches.keys():
+                            matches[n]['identity'] = (matches[n]['identity']*matches[n]['count'] + identity) / (matches[n]['count'] + 1)
+                            matches[n]['length'] = (matches[n]['length']*matches[n]['count'] + length) / (matches[n]['count'] + 1)
+                            matches[n]['bitscore'] = (matches[n]['bitscore']*matches[n]['count'] + bitscore) / (matches[n]['count'] + 1)
+                            matches[n]['count'] += 1
                         else:
-                            bitscores.append(bitscore)
-                            coverages.append(coverage)
-                            lengths.append(length)
-                            count+=1
-                    
-            bitscore_mean = find_mean(bitscores)
-            coverage_mean = find_mean(coverages)
-            length_mean = find_mean(lengths)
-        with open(f"{result_path}/{n}", 'w+') as fout:
-            fout.write(f"{bitscore_mean}\t{coverage_mean}\t{length_mean}\t{count}\n")
+                            matches[n] = {
+                                'identity': identity,
+                                'length': length,
+                                'bitscore': bitscore,
+                                'count': 1
+                            }
+
+            match_array = []
+            for record in SeqIO.parse(f"{frag_path}/{filename}", 'fasta'):
+                n = int(record.id)
+                if n in matches.keys():
+                    match = matches[n]
+                    match_array.append(f"{n}\t{match['identity']}\t{match['length']}\t{match['bitscore']}\t{match['count']}\n")
+                else:
+                    match_array.append(f"{n}\t0\t0\t0\t0\n")
+                
+
+            with open(f"{write_file}", 'w+') as fout:
+                fout.writelines(match_array)
+                
+            update_progress_bar(progress_bar, batch_size)
+           
     except Exception as err:
         with open(err_file, 'a') as fout:
-            fout.write(f"{timestamp()} Error calculating inc. factor for file:{n} {err}\n")
+            fout.write(f"{timestamp()} Error calculating inc. factor for file:{name} {err}\n")
+
+if __name__ == "__main__":
+    plas_bar, chrom_bar, ex_plas_bar = create_progress_bars()
+    create_inc_factor_dirs()
+    inc_factor(plas_write_path, db_path, plas_inc_out_path, plas_inc_write_path, plas_bar)
+    inc_factor(chrom_write_path, db_path, chrom_inc_out_path, chrom_inc_write_path, chrom_bar)
+    inc_factor(extra_plasmid_write_path, db_path, ex_plas_inc_out_path, ex_plas_inc_write_path, ex_plas_bar)

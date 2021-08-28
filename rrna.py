@@ -70,7 +70,7 @@ def rrna_search(frag_path, db_path, out_path, write_path, progress_bar):
 
     except Exception as err:
         with open(err_file, 'a') as fout:
-            fout.write(f"{timestamp()} Error calculating rrna factor for file:{n} {err}\n")
+            fout.write(f"{timestamp()} Error calculating rrna factor for file:{name} {err}\n")
 
 if __name__ == "__main__":
     k = 7
