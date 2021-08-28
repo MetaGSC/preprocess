@@ -8,8 +8,8 @@ from constants import *
 from helpers import create_circ_dirs, find_mean
 
 def circularity(frag_path, split_path, out_path, write_path, pb_desc):
-    progress_bar = create_progress_bar(pb_desc)
     try:
+        progress_bar = create_progress_bar(pb_desc)
         for filename in os.listdir(frag_path):
             name = filename.split(".")[0]
             batch = []
