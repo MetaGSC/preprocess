@@ -6,15 +6,10 @@ k = 7
 err_file = "error.txt"
 log_file = "log.txt"
 
-# progress bar descriptions
-plas_bar_desc  = "plasmid      "
-chrom_bar_desc = "chromosome   "
-ex_plas_bar_desc = "extra plasmid"
-
 # Databases
 # plas_db_path = "../databases/DNA-ML_FYP_2021/plasmid_refs"
 # chrom_db_path = '../databases/DNA-ML_FYP_2021/bacterial_references'
-plas_db_path = "../../databases/DNA-ML_FYP_2021/plas-ref-small"
+plas_db_path = "../../databases/DNA-ML_FYP_2021/plas-ref-tiny"
 chrom_db_path = '../../databases/DNA-ML_FYP_2021/bact-ref-tiny'
 db_path = "../../references/biomarkerdbs"
 cmscan_path = "cmscan"
@@ -43,6 +38,9 @@ chrom_txt_write_path = "results/chromosome/extra/frag-txt"
 extra_plasmid_txt_write_path = "results/extra-plasmid/extra/frag-txt"
 
 # kmer files
+plas_7mer_out_path = "results/plasmid/extra/7mer-out"
+chrom_7mer_out_path = "results/chromosome/extra/7mer-out"
+ex_plas_7mer_out_path = "results/extra-plasmid/extra/7mer-out"
 
 plas_7mer_write_path = "results/plasmid/Data/7mers"
 chrom_7mer_write_path = "results/chromosome/Data/7mers"
@@ -62,9 +60,9 @@ chrom_frag_split_path = "results/chromosome/extra/split"
 ex_plas_frag_split_path = "results/extra-plasmid/extra/split"
 
 # inc factor files
-plas_inc_out_path = "results/plasmid/extra/inc-out"
-chrom_inc_out_path = "results/chromosome/extra/inc-out"
-ex_plas_inc_out_path = "results/extra-plasmid/extra/inc-out"
+plas_inc_out_path = "results/plasmid/extra/blastn-out"
+chrom_inc_out_path = "results/chromosome/extra/blastn-out"
+ex_plas_inc_out_path = "results/extra-plasmid/extra/blastn-out"
 
 plas_inc_write_path = "results/plasmid/Data/inc-fac"
 chrom_inc_write_path = "results/chromosome/Data/inc-fac"

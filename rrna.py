@@ -1,49 +1,83 @@
 import subprocess as sp
-import gzip
+import os
 import csv
+from Bio import SeqIO
 
-from helpers import find_mean, timestamp
+from helpers import timestamp, create_rrna_dirs
+from constants import *
+from progress_bar import *
 
-def rrna_search(input, input_path, out_path, write_path, db_path, err_file):
+def rrna_search(frag_path, db_path, out_path, write_path, pb_desc):
     try:
-        n, frag = input
-        input_file = f'{input_path}/{n}'
-        out_file = f"{out_path}/{n}.rrna.cmscan.tsv"
-        db_file = f"{db_path}/rRNA"
+        progress_bar = create_progress_bar(pb_desc)
+        for filename in os.listdir(frag_path):
+            name = filename.split(".")[0]
+            input_file = f'{frag_path}/{filename}'
+            out_file = f"{out_path}/_temp.rrna.cmscan.tsv"
+            write_file = f'{write_path}/{name}'
+            db_file = f'{db_path}/rRNA'
 
-        cmd = [
-            'cmscan',
-            '--noali',
-            '--cut_tc',
-            '--cpu', '1',
-            '--tblout', str(out_file),
-            db_file,
-            input_file,
-        ]
-        proc = sp.run(
+            cmd = [
+                cmscan_path,
+                '--noali',
+                '--cut_tc',
+                '--cpu', str(thread_count),
+                '--tblout', str(out_file),
+                db_file,
+                input_file,
+            ]
+
+            proc = sp.run(
                 cmd,
                 stdout=sp.PIPE,
                 stderr=sp.PIPE,
                 universal_newlines=True
-        )
-        tsvfile = open(out_file)
-        fh = csv.reader(tsvfile, delimiter="\t")
-        lengths = []
-        bitscores = []
-        count = 0
+            )
 
-        for line in fh:
-            if(line[0][0] != '#'):
-                cols = line[0].strip().split()
-                lengths.append(abs(int(cols[8])- int(cols[7])))
-                bitscores.append(float(cols[14]))
-                count+=1
-        tsvfile.close()
-        
-        bitscore_mean = find_mean(bitscores)
-        length_mean = find_mean(lengths)
-        with gzip.open(f"{write_path}/{n}.gz", mode='wt') as fout:
-            fout.write(f"{bitscore_mean}\t{length_mean}\t{count}\n")
+            matches = {}
+            if proc.returncode == 0:
+                tsvfile = open(out_file)
+                fh = csv.reader(tsvfile, delimiter="\t")
+                for line in fh:
+                    if(line[0][0] != '#'):
+                        cols = line[0].strip().split()
+                        n = int(cols[2])
+                        length = abs(int(cols[8])- int(cols[7]))
+                        bitscore = float(cols[14])
+
+                        if n in matches.keys():
+                            matches[n]['length'] = (matches[n]['length']*matches[n]['count'] + length) / (matches[n]['count'] + 1)
+                            matches[n]['bitscore'] = (matches[n]['bitscore']*matches[n]['count'] + bitscore) / (matches[n]['count'] + 1)
+                            matches[n]['count'] += 1
+                        else:
+                            matches[n] = {
+                                'length': length,
+                                'bitscore': bitscore,
+                                'count': 1
+                            }
+
+            match_array = []
+            for record in SeqIO.parse(f"{frag_path}/{filename}", 'fasta'):
+                n = int(record.id)
+                if n in matches.keys():
+                    match = matches[n]
+                    match_array.append(f"{n}\t{match['length']}\t{match['bitscore']}\t{match['count']}\n")
+                else:
+                    match_array.append(f"{n}\t0\t0\t0\n")
+                
+            with open(f"{write_file}", 'w+') as fout:
+                fout.writelines(match_array)
+            update_progress_bar(progress_bar, batch_size)
+
+        close_progress_bar(progress_bar)
+
     except Exception as err:
         with open(err_file, 'a') as fout:
-            fout.write(f"{timestamp()} Error calculating rrna factor for file:{n} {err}\n")
+            fout.write(f"{timestamp()} Error calculating rrna factor for file:{name} {err}\n")
+
+if __name__ == "__main__":
+    k = 7
+    create_rrna_dirs()
+    rrna_search(plas_write_path, db_path, plas_rrna_out_path, plas_rrna_write_path, plas_bar_desc)
+    rrna_search(chrom_write_path, db_path, chrom_rrna_out_path, chrom_rrna_write_path, chrom_bar_desc)
+    rrna_search(extra_plasmid_write_path, db_path, ex_plas_rrna_out_path, ex_plas_rrna_write_path, ex_plas_bar_desc)
