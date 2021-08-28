@@ -7,7 +7,7 @@ from Bio import SeqIO
 import os
 import csv
 
-from progress_bar import create_progress_bars, update_progress_bar
+from progress_bar import *
 from helpers import timestamp
 from constants import *
 from helpers import create_circ_dirs, find_mean, delete_dir_if_exist
@@ -116,7 +116,12 @@ def circularity(frag_path, split_path, out_path, write_path, progress_bar):
 
 if __name__ == "__main__":
     create_circ_dirs()
-    plas_bar, chrom_bar, ex_plas_bar = create_progress_bars()
+    plas_bar = create_progress_bar(plas_bar_desc)
     circularity(plas_write_path, plas_frag_split_path, plas_circ_out_path, plas_circ_write_path, 1)
+    close_progress_bar(plas_bar)
+    chrom_bar = create_progress_bar(chrom_bar_desc)
     circularity(chrom_write_path, chrom_frag_split_path, chrom_circ_out_path, chrom_circ_write_path, 2)
+    close_progress_bar(chrom_bar)
+    ex_plas_bar = create_progress_bar(ex_plas_bar_desc)
     circularity(extra_plasmid_write_path, ex_plas_frag_split_path, ex_plas_circ_out_path, ex_plas_circ_write_path, 3)
+    close_progress_bar(ex_plas_bar)

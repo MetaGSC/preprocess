@@ -3,11 +3,12 @@ import os
 from Bio import SeqIO
 
 from helpers import timestamp, create_inc_factor_dirs
-from progress_bar import create_progress_bars, update_progress_bar
+from progress_bar import *
 from constants import *
 
-def inc_factor(frag_path, db_path, out_path, write_path, progress_bar):
+def inc_factor(frag_path, db_path, out_path, write_path, pb_desc):
     try:
+        progress_bar = create_progress_bar(pb_desc)
         for filename in os.listdir(frag_path):
             name = filename.split(".")[0]
             input_file = f'{frag_path}/{name}.fasta'
@@ -70,14 +71,15 @@ def inc_factor(frag_path, db_path, out_path, write_path, progress_bar):
                 fout.writelines(match_array)
                 
             update_progress_bar(progress_bar, batch_size)
-           
+    
+        close_progress_bar(progress_bar)
+       
     except Exception as err:
         with open(err_file, 'a') as fout:
             fout.write(f"{timestamp()} Error calculating inc. factor for file:{name} {err}\n")
 
 if __name__ == "__main__":
-    plas_bar, chrom_bar, ex_plas_bar = create_progress_bars()
     create_inc_factor_dirs()
-    inc_factor(plas_write_path, db_path, plas_inc_out_path, plas_inc_write_path, plas_bar)
-    inc_factor(chrom_write_path, db_path, chrom_inc_out_path, chrom_inc_write_path, chrom_bar)
-    inc_factor(extra_plasmid_write_path, db_path, ex_plas_inc_out_path, ex_plas_inc_write_path, ex_plas_bar)
+    inc_factor(plas_write_path, db_path, plas_inc_out_path, plas_inc_write_path, plas_bar_desc)
+    inc_factor(chrom_write_path, db_path, chrom_inc_out_path, chrom_inc_write_path, chrom_bar_desc)
+    inc_factor(extra_plasmid_write_path, db_path, ex_plas_inc_out_path, ex_plas_inc_write_path, ex_plas_bar_desc)

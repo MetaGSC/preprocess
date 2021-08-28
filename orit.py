@@ -4,10 +4,11 @@ from Bio import SeqIO
 
 from helpers import timestamp, create_orit_dirs
 from constants import *
-from progress_bar import create_progress_bars, update_progress_bar
+from progress_bar import *
 
-def orit_search(frag_path, db_path, out_path, write_path, progress_bar):
+def orit_search(frag_path, db_path, out_path, write_path, pb_desc):
     try:
+        progress_bar = create_progress_bar(pb_desc)
         for filename in os.listdir(frag_path):
             name = filename.split(".")[0]
             input_file = f'{frag_path}/{filename}'
@@ -72,6 +73,7 @@ def orit_search(frag_path, db_path, out_path, write_path, progress_bar):
                 fout.writelines(match_array)
                 
             update_progress_bar(progress_bar, batch_size)
+        close_progress_bar(progress_bar)
 
     except Exception as err:
         with open(err_file, 'a') as fout:
@@ -79,8 +81,7 @@ def orit_search(frag_path, db_path, out_path, write_path, progress_bar):
 
 if __name__ == "__main__":
     k = 7
-    plas_bar, chrom_bar, ex_plas_bar = create_progress_bars()
     create_orit_dirs()
-    orit_search(plas_write_path, db_path, plas_orit_out_path, plas_orit_write_path, plas_bar)
-    orit_search(chrom_write_path, db_path, chrom_orit_out_path, chrom_orit_write_path, chrom_bar)
-    orit_search(extra_plasmid_write_path, db_path, ex_plas_orit_out_path, ex_plas_orit_write_path, ex_plas_bar)
+    orit_search(plas_write_path, db_path, plas_orit_out_path, plas_orit_write_path, plas_bar_desc)
+    orit_search(chrom_write_path, db_path, chrom_orit_out_path, chrom_orit_write_path, chrom_bar_desc)
+    orit_search(extra_plasmid_write_path, db_path, ex_plas_orit_out_path, ex_plas_orit_write_path, ex_plas_bar_desc)

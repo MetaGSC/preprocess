@@ -6,7 +6,7 @@ import os
 import os.path
 from math import log
 
-from progress_bar import create_progress_bars, update_progress_bar
+from progress_bar import *
 from constants import *
 from helpers import create_fragment_dirs, timestamp
 from write_file_id import write_file_id
@@ -82,8 +82,7 @@ def process():
     chrom_frag_gen_c = filter(lambda x: x["type"] == "chromosome", chrom_frag_gen)
     chrom_frag_gen_p = filter(lambda x: x["type"] == "plasmid", chrom_frag_gen)
 
-    plas_bar, chrom_bar, ex_plas_bar = create_progress_bars()
-
+    plas_bar = create_progress_bar(plas_bar_desc)
     batch_i = 0
     for input in enumerate(plas_frag_gen):
         n, _ = input
@@ -100,7 +99,9 @@ def process():
     if not ((n+1)%batch_size == 0):
         write_plas_frags(batch_i, input_arr, plas_write_path, err_file)
         write_file_id(batch_i, input_arr, plas_target_path, err_file)
+    close_progress_bar(plas_bar)
 
+    chrom_bar = create_progress_bar(chrom_bar_desc)
     batch_i = 0
     for input in enumerate(chrom_frag_gen_c):
         n, _ = input
@@ -117,7 +118,9 @@ def process():
     if not ((n+1)%batch_size == 0):
         write_chrom_frags(batch_i, input_arr, chrom_write_path, err_file)
         write_file_id(batch_i, input_arr, chrom_target_path, err_file)
-    
+    close_progress_bar(chrom_bar)
+
+    ex_plas_bar = create_progress_bar(ex_plas_bar_desc)
     batch_i = 0
     for input in enumerate(chrom_frag_gen_p):
         n, _ = input
@@ -134,6 +137,7 @@ def process():
     if not ((n+1)%batch_size == 0):
         write_chrom_frags(batch_i, input_arr, extra_plasmid_write_path, err_file)
         write_file_id(batch_i, input_arr, ex_plas_target_path, err_file)
+    close_progress_bar(ex_plas_bar)
 
 if __name__ == "__main__":
     process()

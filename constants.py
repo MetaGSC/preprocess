@@ -6,10 +6,15 @@ k = 7
 err_file = "error.txt"
 log_file = "log.txt"
 
+# progress bar descriptions
+plas_bar_desc  = "plasmid      "
+chrom_bar_desc = "chromosome   "
+ex_plas_bar_desc = "extra plasmid"
+
 # Databases
 # plas_db_path = "../databases/DNA-ML_FYP_2021/plasmid_refs"
 # chrom_db_path = '../databases/DNA-ML_FYP_2021/bacterial_references'
-plas_db_path = "../../databases/DNA-ML_FYP_2021/plas-ref-tiny"
+plas_db_path = "../../databases/DNA-ML_FYP_2021/plas-ref-small"
 chrom_db_path = '../../databases/DNA-ML_FYP_2021/bact-ref-tiny'
 db_path = "../../references/biomarkerdbs"
 cmscan_path = "cmscan"

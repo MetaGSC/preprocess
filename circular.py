@@ -3,15 +3,16 @@ from Bio import SeqIO
 import os
 import csv
 
-from progress_bar import create_progress_bars, update_progress_bar
+from progress_bar import *
 from helpers import timestamp
 from constants import *
 from helpers import create_circ_dirs, find_mean
 
-def circularity(frag_path, split_path, out_path, write_path, progress_bar):
-    for filename in os.listdir(frag_path):
-        name = filename.split(".")[0]
-        try:
+def circularity(frag_path, split_path, out_path, write_path, pb_desc):
+    progress_bar = create_progress_bar(pb_desc)
+    try:
+        for filename in os.listdir(frag_path):
+            name = filename.split(".")[0]
             batch = []
             for record in SeqIO.parse(f"{frag_path}/{filename}", 'fasta'):
                 n = int(record.id)
@@ -81,13 +82,14 @@ def circularity(frag_path, split_path, out_path, write_path, progress_bar):
             with open(f"{write_path}/{name}", "w") as f:
                 f.writelines(batch)
 
-        except Exception as err:
-            with open(err_file, 'a') as fout:
-                fout.write(f"{timestamp()} Error reading file {filename}: {err}\n")
+        close_progress_bar(progress_bar)
+
+    except Exception as err:
+        with open(err_file, 'a') as fout:
+            fout.write(f"{timestamp()} Error reading file {filename}: {err}\n")
 
 if __name__ == "__main__":
-    plas_bar, chrom_bar, ex_plas_bar = create_progress_bars()
     create_circ_dirs()
-    circularity(plas_write_path, plas_frag_split_path, plas_circ_out_path, plas_circ_write_path, plas_bar)
-    circularity(chrom_write_path, chrom_frag_split_path, chrom_circ_out_path, chrom_circ_write_path, chrom_bar)
-    circularity(extra_plasmid_write_path, ex_plas_frag_split_path, ex_plas_circ_out_path, ex_plas_circ_write_path, ex_plas_bar)
+    circularity(plas_write_path, plas_frag_split_path, plas_circ_out_path, plas_circ_write_path, plas_bar_desc)
+    circularity(chrom_write_path, chrom_frag_split_path, chrom_circ_out_path, chrom_circ_write_path, chrom_bar_desc)
+    circularity(extra_plasmid_write_path, ex_plas_frag_split_path, ex_plas_circ_out_path, ex_plas_circ_write_path, ex_plas_bar_desc)

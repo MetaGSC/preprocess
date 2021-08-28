@@ -5,10 +5,11 @@ from Bio import SeqIO
 
 from helpers import timestamp, create_rrna_dirs
 from constants import *
-from progress_bar import create_progress_bars, update_progress_bar
+from progress_bar import *
 
-def rrna_search(frag_path, db_path, out_path, write_path, progress_bar):
+def rrna_search(frag_path, db_path, out_path, write_path, pb_desc):
     try:
+        progress_bar = create_progress_bar(pb_desc)
         for filename in os.listdir(frag_path):
             name = filename.split(".")[0]
             input_file = f'{frag_path}/{filename}'
@@ -68,14 +69,15 @@ def rrna_search(frag_path, db_path, out_path, write_path, progress_bar):
                 fout.writelines(match_array)
             update_progress_bar(progress_bar, batch_size)
 
+        close_progress_bar(progress_bar)
+
     except Exception as err:
         with open(err_file, 'a') as fout:
             fout.write(f"{timestamp()} Error calculating rrna factor for file:{name} {err}\n")
 
 if __name__ == "__main__":
     k = 7
-    plas_bar, chrom_bar, ex_plas_bar = create_progress_bars()
     create_rrna_dirs()
-    rrna_search(plas_write_path, db_path, plas_rrna_out_path, plas_rrna_write_path, plas_bar)
-    rrna_search(chrom_write_path, db_path, chrom_rrna_out_path, chrom_rrna_write_path, chrom_bar)
-    rrna_search(extra_plasmid_write_path, db_path, ex_plas_rrna_out_path, ex_plas_rrna_write_path, ex_plas_bar)
+    rrna_search(plas_write_path, db_path, plas_rrna_out_path, plas_rrna_write_path, plas_bar_desc)
+    rrna_search(chrom_write_path, db_path, chrom_rrna_out_path, chrom_rrna_write_path, chrom_bar_desc)
+    rrna_search(extra_plasmid_write_path, db_path, ex_plas_rrna_out_path, ex_plas_rrna_write_path, ex_plas_bar_desc)
