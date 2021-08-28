@@ -47,7 +47,7 @@ def special_gene_search(
         count = 0
 
         for line in fh:
-            if(line[0][0] != '#'):
+            # if(line[0][0] != '#'):
                 print(line)
                 # cols = line[0].strip().split()
                 # lengths.append(abs(int(cols[8])- int(cols[7])))

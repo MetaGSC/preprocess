@@ -2,10 +2,10 @@ import os
 
 from constants import *
 
-def find_mean(sum, divisor):
-    if divisor == 0:
-        return 0
-    return float(sum)/divisor
+def find_mean(data):
+  if len(data) == 0:
+    return 0
+  return float(sum(data))/len(data)
 
 def timestamp():
     import datetime
@@ -15,74 +15,9 @@ def create_dir_if_needed(path):
     if not os.path.exists(path):
         os.makedirs(path)
 
-def delete_dir_if_exist(path):
-  if os.path.exists(path):
-    os.remove(path)
-
-def create_fragment_dirs():
-    # fragments
-    create_dir_if_needed(plas_write_path)
-    create_dir_if_needed(chrom_write_path)
-    create_dir_if_needed(extra_plasmid_write_path)
-
-def create_circ_dirs():
-     # circularity files
-    create_dir_if_needed(plas_circ_write_path)
-    create_dir_if_needed(chrom_circ_write_path)
-    create_dir_if_needed(ex_plas_circ_write_path)
-
-    create_dir_if_needed(plas_circ_out_path)
-    create_dir_if_needed(chrom_circ_out_path)
-    create_dir_if_needed(ex_plas_circ_out_path)
-
-    create_dir_if_needed(plas_frag_split_path)
-    create_dir_if_needed(chrom_frag_split_path)
-    create_dir_if_needed(ex_plas_frag_split_path)
-
-def create_kmer_files():
-    # kmer files
-    create_dir_if_needed(plas_7mer_write_path)
-    create_dir_if_needed(chrom_7mer_write_path)
-    create_dir_if_needed(ex_plas_7mer_write_path)
-
-def create_inc_factor_dirs():
-    # inc factor files
-    create_dir_if_needed(plas_inc_out_path)
-    create_dir_if_needed(chrom_inc_out_path)
-    create_dir_if_needed(ex_plas_inc_out_path)
-
-    create_dir_if_needed(plas_inc_write_path)
-    create_dir_if_needed(chrom_inc_write_path)
-    create_dir_if_needed(ex_plas_inc_write_path)
-
-def create_orit_dirs():
-  # orit files
-    create_dir_if_needed(plas_orit_out_path)
-    create_dir_if_needed(chrom_orit_out_path)
-    create_dir_if_needed(ex_plas_orit_out_path)
-    
-    create_dir_if_needed(plas_orit_write_path)
-    create_dir_if_needed(chrom_orit_write_path)
-    create_dir_if_needed(ex_plas_orit_write_path)
-
-def create_rrna_dirs():
-  # rrna files
-    create_dir_if_needed(plas_rrna_out_path)
-    create_dir_if_needed(chrom_rrna_out_path)
-    create_dir_if_needed(ex_plas_rrna_out_path)
-
-    create_dir_if_needed(plas_rrna_write_path)
-    create_dir_if_needed(chrom_rrna_write_path)
-    create_dir_if_needed(ex_plas_rrna_write_path)
-
 def create_file_structure():
+
     ## create dirs if they don't exist
-
-    # labels
-    create_dir_if_needed(plas_label_path)
-    create_dir_if_needed(chrom_label_path)
-    create_dir_if_needed(ex_plas_label_path)
-
     # fragments
     create_dir_if_needed(plas_write_path)
     create_dir_if_needed(chrom_write_path)
@@ -97,6 +32,10 @@ def create_file_structure():
     create_dir_if_needed(plas_7mer_write_path)
     create_dir_if_needed(chrom_7mer_write_path)
     create_dir_if_needed(ex_plas_7mer_write_path)
+
+    create_dir_if_needed(plas_7mer_out_path)
+    create_dir_if_needed(chrom_7mer_out_path)
+    create_dir_if_needed(ex_plas_7mer_out_path)
 
     # circularity files
     create_dir_if_needed(plas_circ_write_path)
