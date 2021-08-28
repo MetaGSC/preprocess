@@ -38,9 +38,6 @@ chrom_txt_write_path = "results/chromosome/extra/frag-txt"
 extra_plasmid_txt_write_path = "results/extra-plasmid/extra/frag-txt"
 
 # kmer files
-plas_7mer_out_path = "results/plasmid/extra/7mer-out"
-chrom_7mer_out_path = "results/chromosome/extra/7mer-out"
-ex_plas_7mer_out_path = "results/extra-plasmid/extra/7mer-out"
 
 plas_7mer_write_path = "results/plasmid/Data/7mers"
 chrom_7mer_write_path = "results/chromosome/Data/7mers"
@@ -60,9 +57,9 @@ chrom_frag_split_path = "results/chromosome/extra/split"
 ex_plas_frag_split_path = "results/extra-plasmid/extra/split"
 
 # inc factor files
-plas_inc_out_path = "results/plasmid/extra/blastn-out"
-chrom_inc_out_path = "results/chromosome/extra/blastn-out"
-ex_plas_inc_out_path = "results/extra-plasmid/extra/blastn-out"
+plas_inc_out_path = "results/plasmid/extra/inc-out"
+chrom_inc_out_path = "results/chromosome/extra/inc-out"
+ex_plas_inc_out_path = "results/extra-plasmid/extra/inc-out"
 
 plas_inc_write_path = "results/plasmid/Data/inc-fac"
 chrom_inc_write_path = "results/chromosome/Data/inc-fac"
