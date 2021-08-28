@@ -2,7 +2,7 @@ import subprocess as sp
 import os
 from Bio import SeqIO
 
-from helpers import find_mean, timestamp, create_orit_dirs
+from helpers import timestamp, create_orit_dirs
 from constants import *
 from progress_bar import create_progress_bars, update_progress_bar
 
@@ -33,13 +33,9 @@ def orit_search(frag_path, db_path, out_path, write_path, progress_bar):
                 stderr=sp.PIPE,
                 universal_newlines=True
             )
-
-            lengths = []
-            coverages = []
-            identities = []
             
+            matches = {}
             if proc.returncode == 0:
-                matches = {}
                 with open(out_file, 'r') as fh:
                     for line in fh:
                         line = line.rstrip()

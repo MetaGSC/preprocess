@@ -64,7 +64,17 @@ def create_orit_dirs():
     create_dir_if_needed(plas_orit_write_path)
     create_dir_if_needed(chrom_orit_write_path)
     create_dir_if_needed(ex_plas_orit_write_path)
-    
+
+def create_rrna_dirs():
+  # rrna files
+    create_dir_if_needed(plas_rrna_out_path)
+    create_dir_if_needed(chrom_rrna_out_path)
+    create_dir_if_needed(ex_plas_rrna_out_path)
+
+    create_dir_if_needed(plas_rrna_write_path)
+    create_dir_if_needed(chrom_rrna_write_path)
+    create_dir_if_needed(ex_plas_rrna_write_path)
+
 def create_file_structure():
     ## create dirs if they don't exist
 
