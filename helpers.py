@@ -44,6 +44,26 @@ def create_kmer_files():
     create_dir_if_needed(plas_7mer_write_path)
     create_dir_if_needed(chrom_7mer_write_path)
     create_dir_if_needed(ex_plas_7mer_write_path)
+
+def create_inc_factor_dirs():
+    # inc factor files
+    create_dir_if_needed(plas_inc_out_path)
+    create_dir_if_needed(chrom_inc_out_path)
+    create_dir_if_needed(ex_plas_inc_out_path)
+
+    create_dir_if_needed(plas_inc_write_path)
+    create_dir_if_needed(chrom_inc_write_path)
+    create_dir_if_needed(ex_plas_inc_write_path)
+
+def create_orit_dirs():
+  # orit files
+    create_dir_if_needed(plas_orit_out_path)
+    create_dir_if_needed(chrom_orit_out_path)
+    create_dir_if_needed(ex_plas_orit_out_path)
+    
+    create_dir_if_needed(plas_orit_write_path)
+    create_dir_if_needed(chrom_orit_write_path)
+    create_dir_if_needed(ex_plas_orit_write_path)
     
 def create_file_structure():
     ## create dirs if they don't exist
