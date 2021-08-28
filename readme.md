@@ -15,7 +15,7 @@ Following tools should be installed.
 -   **Biopython** - used to read fasta files
 
 -   **tqdm** - used to display runtime progress
- 
+
 ### Infernal (rRNA) - [github link](https://github.com/EddyRivasLab/infernal)
 
 ```
@@ -61,9 +61,9 @@ make install
 ```
 ./nucmer -h
 ```
- 
+
 ### BLAST+ (OriT and Incomp) - [documentation link](https://www.ncbi.nlm.nih.gov/books/NBK569861/)
- 
+
 ```
 wget https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/2.7.1/ncbi-blast-2.7.1+-x64-linux.tar.gz
 ```
@@ -86,26 +86,39 @@ conda install -c conda-forge tqdm
 ## Usage
 
 1. Provide the correct paths to the chromosome and plasmid databases in the constants file `plas_db_path` `chrom_db_path`.
-```
-plas_db_path = "../databases/DNA-ML_FYP_2021/plasmid_refs"
-chrom_db_path = '../databases/DNA-ML_FYP_2021/bacterial_references'
-```
+    ```
+    plas_db_path = "../databases/DNA-ML_FYP_2021/plasmid_refs"
+    chrom_db_path = '../databases/DNA-ML_FYP_2021/bacterial_references'
+    ```
 
 2. Provide the `db_path` - the biomarker db path in the constants file.
 
-```
-db_path = "../../references/biomarkerdbs"
-```
+    ```
+    db_path = "../../references/biomarkerdbs"
+    ```
 
 3. If you haven't added the paths to the executables to your path, add them to the constants file.
-``` python
-cmscan_path = "/path/to/executable"
-blastn_path = "/path/to/executable"
-seq2vec_path = "/path/to/executable"
-nucmer_path = "/path/to/executable"
-```
+    ``` python
+    cmscan_path = "/path/to/executable"
+    blastn_path = "/path/to/executable"
+    seq2vec_path = "/path/to/executable"
+    nucmer_path = "/path/to/executable"
+    ```
 
-3. Run the file `process.py`
-```
-python process.py
-```
+3. Change the `thread_count`, `batch_size` parameters as necessary in the constants file.
+
+   ```python
+   thread_count = 8
+   batch_size = 1000
+   ```
+
+3. Executing each of the files mentioned below provide the results. The output will be a folder `result` in the current directory.
+
+   | File        | Description                                                  |
+   | ----------- | :----------------------------------------------------------- |
+   | [fragment.py](./fragment.py) | Breaks the plasmid, chromosome sequences into fragments of length `frag_len`. **The output of this is required for the other operations as input** |
+   | [circular.py](./circular.py) | Features related to the circularity of a fragment            |
+   | [inc_fac.py](./inc_fac.py)  | Features related to the availability of incompatible factor  |
+   | [kmer.py](./kmer.py)     | The kmer frequencies of each fragment                        |
+   | [orit.py](./orit.py)     | Features related to the availability of OriT                 |
+   | [rrna.py](./rrna.py)     | Features related to the availability of rRNA genes           |
