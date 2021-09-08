@@ -6,6 +6,10 @@ k = 7
 err_file = "error.txt"
 log_file = "log.txt"
 
+plas_max = 10**6
+chrom_max = 10**6
+ex_plas_max = 10**5
+
 # progress bar descriptions
 plas_bar_desc  = "plasmid      "
 chrom_bar_desc = "chromosome   "
