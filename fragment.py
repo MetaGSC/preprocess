@@ -13,9 +13,9 @@ from write_file_id import write_file_id
     
 def plas_frag_generator(dir_path, frag_len, max_frag):
     frag_count = 0
-    try:
-        while(True):
-            for filename in os.listdir(dir_path):
+    while(True):
+        for filename in os.listdir(dir_path):
+            try:
                 for record in SeqIO.parse(f"{dir_path}/{filename}", 'fasta'):
                     length = len(record.seq)
                     if(length<frag_len):
@@ -26,15 +26,15 @@ def plas_frag_generator(dir_path, frag_len, max_frag):
                     frag_count+=1
                     if(frag_count>=max_frag):
                         return
-    except Exception as err:
-        with open(err_file, 'a') as fout:
-            fout.write(f"{timestamp()} Error reading plasmid file {filename}: {err}\n")
+            except Exception as err:
+                with open(err_file, 'a') as fout:
+                    fout.write(f"{timestamp()} Error reading plasmid file {filename}: {err}\n")
 
 def chrom_frag_generator(dir_path, frag_len, max_frag, type):
     frag_count = 0
-    try:
-        while(True):
-            for filename in os.listdir(dir_path):
+    while(True):
+        for filename in os.listdir(dir_path):
+            try:
                 file_comp = filename.split("_")
                 name = file_comp[0]+"_"+file_comp[1]
                 with gzip.open(f"{dir_path}/{filename}", "rt") as handle:
@@ -54,9 +54,9 @@ def chrom_frag_generator(dir_path, frag_len, max_frag, type):
                         frag_count+=1
                         if(frag_count>=max_frag):
                             return
-    except Exception as err:
-        with open(err_file, 'a') as fout:
-            fout.write(f"{timestamp()} Error reading chromosome file {filename}: {err}, {len(record)}\n")
+            except Exception as err:
+                with open(err_file, 'a') as fout:
+                    fout.write(f"{timestamp()} Error reading chromosome file {filename}: {err}, {len(record)}\n")
 
 def write_plas_frags(batch_i, input_arr, frag_path, err_file):
     try:
