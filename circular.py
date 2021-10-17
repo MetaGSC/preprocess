@@ -1,5 +1,3 @@
-## Single threaded circular.py is faster than the multiprocessing version here
-
 import subprocess as sp
 import concurrent.futures
 from itertools import repeat

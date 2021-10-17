@@ -33,6 +33,7 @@ def circularity(frag_path, split_path, out_path, write_path, pb_desc):
 
                 cmd = [
                 nucmer_path,
+                '-t', str(thread_count),
                 '-f',  # only forward strand
                 '-l', '40',  # increase min match length to 40 bp
                 '-p', out_file,
