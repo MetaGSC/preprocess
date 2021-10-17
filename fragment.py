@@ -8,29 +8,32 @@ from math import log
 
 from progress_bar import *
 from constants import *
-from helpers import create_fragment_dirs, timestamp
+from helpers import create_fragment_dirs, timestamp, read_filter_data
 from write_file_id import write_file_id
     
-def plas_frag_generator(dir_path, frag_len, max_frag):
+def plas_frag_generator(dir_path, frag_len, max_frag, seq_filter, filter_val):
     frag_count = 0
     while(True):
         for filename in os.listdir(dir_path):
             try:
                 for record in SeqIO.parse(f"{dir_path}/{filename}", 'fasta'):
-                    length = len(record.seq)
-                    if(length<frag_len):
-                        rand_i = 0
-                    else:
-                        rand_i = randint(0, length-frag_len)
-                    yield {"id":record.description, "seq":str(record.seq)[rand_i:rand_i+min(frag_len, length)]}
-                    frag_count+=1
-                    if(frag_count>=max_frag):
-                        return
+                    key = record.id
+                    if(seq_filter[key] >= filter_val):                    
+                        length = len(record.seq)
+                        if(length<frag_len):
+                            rand_i = 0
+                        else:
+                            rand_i = randint(0, length-frag_len)
+                        yield {"id":record.description, "seq":str(record.seq)[rand_i:rand_i+min(frag_len, length)]}
+                        frag_count+=1
+                        if(frag_count>=max_frag):
+                            return
+
             except Exception as err:
                 with open(err_file, 'a') as fout:
                     fout.write(f"{timestamp()} Error reading plasmid file {filename}: {err}\n")
 
-def chrom_frag_generator(dir_path, frag_len, max_frag, type):
+def chrom_frag_generator(dir_path, frag_len, max_frag, type, seq_filter, filter_val):
     frag_count = 0
     while(True):
         for filename in os.listdir(dir_path):
@@ -39,21 +42,24 @@ def chrom_frag_generator(dir_path, frag_len, max_frag, type):
                 name = file_comp[0]+"_"+file_comp[1]
                 with gzip.open(f"{dir_path}/{filename}", "rt") as handle:
                     for record in SeqIO.parse(handle, 'fasta'):
-                        length = len(record.seq)
-                        if((type== "chromosome" and "plasmid" in record.description)
-                            or (type== "plasmid" and "chromosome" in record.description)):
-                            continue
-                        if(length<frag_len):
-                            rand_i = 0
-                        else:
-                            rand_i = randint(0, length-frag_len)
-                        yield {
-                            "id":record.description, "name":name, 
-                            "seq":str(record.seq)[rand_i:rand_i+min(frag_len,length)],
-                            }
-                        frag_count+=1
-                        if(frag_count>=max_frag):
-                            return
+                        key = record.id
+                        if((type == "chromosome" and seq_filter[key] <= filter_val) or (type == "plasmid" and seq_filter[key] >= filter_val)):                    
+                            length = len(record.seq)
+                            if((type== "chromosome" and "plasmid" in record.description)
+                                or (type== "plasmid" and "chromosome" in record.description)):
+                                continue
+                            if(length<frag_len):
+                                rand_i = 0
+                            else:
+                                rand_i = randint(0, length-frag_len)
+                            yield {
+                                "id":record.description, "name":name, 
+                                "seq":str(record.seq)[rand_i:rand_i+min(frag_len,length)],
+                                }
+                            frag_count+=1
+                            if(frag_count>=max_frag):
+                                return
+
             except Exception as err:
                 with open(err_file, 'a') as fout:
                     fout.write(f"{timestamp()} Error reading chromosome file {filename}: {err}, {len(record)}\n")
@@ -81,14 +87,12 @@ def process():
     
     ## create file structure
     create_fragment_dirs()
+    plas_filter, chrom_filter = read_filter_data()
 
     ## read and write plasmid/ chromosome files
-    plas_frag_gen = plas_frag_generator(plas_db_path, frag_len, plas_max)
-    chrom_frag_gen_c = chrom_frag_generator(chrom_db_path, frag_len, chrom_max, "chromosome")
-    chrom_frag_gen_p = chrom_frag_generator(chrom_db_path, frag_len, ex_plas_max, "plasmid")
-
-    # chrom_frag_gen_c = filter(lambda x: x["type"] == "chromosome", chrom_frag_gen)
-    # chrom_frag_gen_p = filter(lambda x: x["type"] == "plasmid", chrom_frag_gen)
+    plas_frag_gen = plas_frag_generator(plas_db_path, frag_len, plas_max, plas_filter, plas_filter_val)
+    chrom_frag_gen_c = chrom_frag_generator(chrom_db_path, frag_len, chrom_max, "chromosome", chrom_filter, chrom_filter_val)
+    chrom_frag_gen_p = chrom_frag_generator(chrom_db_path, frag_len, ex_plas_max, "plasmid", chrom_filter, plas_filter_val)
 
     plas_bar = create_progress_bar(plas_bar_desc)
     batch_i = 0

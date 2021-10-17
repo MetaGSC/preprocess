@@ -15,11 +15,17 @@ plas_bar_desc  = "plasmid      "
 chrom_bar_desc = "chromosome   "
 ex_plas_bar_desc = "extra plasmid"
 
+# sequence filter constants
+plas_filter_val = 0.99
+chrom_filter_val = 0.01
+plas_filter_file = "/media/gayal/Programming/FYP/databases/DNAML-plasmid.fasta.probs.out"
+chrom_filter_file = "/media/gayal/Programming/FYP/databases/DNAML_bacterial_batch0.fasta.probs.out"
+
 # Databases
-# plas_db_path = "../databases/DNA-ML_FYP_2021/plasmid_refs"
-# chrom_db_path = '../databases/DNA-ML_FYP_2021/bacterial_references'
-plas_db_path = "../../databases/DNA-ML_FYP_2021/plas-ref-small"
-chrom_db_path = '../../databases/DNA-ML_FYP_2021/bact-ref-tiny'
+plas_db_path = "/media/gayal/Programming/FYP/databases/DNA-ML_FYP_2021/plasmid_refs"
+chrom_db_path = '/media/gayal/Programming/FYP/databases/DNA-ML_FYP_2021/bacterial_references'
+# plas_db_path = "/media/gayal/Programming/FYP/databases/DNA-ML_FYP_2021/plas-ref-small"
+# chrom_db_path = '/media/gayal/Programming/FYP/databases/DNA-ML_FYP_2021/bact-ref-tiny'
 db_path = "../../references/biomarkerdbs"
 cmscan_path = "cmscan"
 blastn_path = "blastn"

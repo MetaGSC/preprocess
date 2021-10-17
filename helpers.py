@@ -11,6 +11,11 @@ def timestamp():
     import datetime
     return datetime.datetime.now().strftime("[%Y-%m-%d %H:%M:%S]")
 
+def read_filter_data():
+    plas_filter = { line[0]: float(line[1]) for line in [line.strip("\n").split("\t") for line in open(plas_filter_file).readlines()] }
+    chrom_filter = { line[0]: float(line[1]) for line in [line.strip("\n").split("\t") for line in open(chrom_filter_file).readlines()] }
+    return plas_filter, chrom_filter
+
 def create_dir_if_needed(path):
     if not os.path.exists(path):
         os.makedirs(path)
