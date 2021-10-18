@@ -1,7 +1,8 @@
 thread_count = 8
 batch_size = 1000
 frag_len = 5000
-coverage = 2
+plas_coverage = 20
+chrom_coverage = 20
 k = 7
 err_file = "error.txt"
 log_file = "log.txt"

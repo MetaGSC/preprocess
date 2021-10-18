@@ -18,16 +18,19 @@ def plas_frag_generator(dir_path, frag_len, max_frag, seq_filter, filter_val):
             try:
                 for record in SeqIO.parse(f"{dir_path}/{filename}", 'fasta'):
                     key = record.id
-                    if(seq_filter[key] >= filter_val):                    
+                    if(seq_filter[key] >= filter_val):
                         length = len(record.seq)
-                        if(length<frag_len):
-                            rand_i = 0
-                        else:
-                            rand_i = randint(0, length-frag_len)
-                        yield {"id":record.description, "seq":str(record.seq)[rand_i:rand_i+min(frag_len, length)]}
-                        frag_count+=1
-                        if(frag_count>=max_frag):
-                            return
+                        for _ in range(plas_coverage):
+                            if(length<frag_len):
+                                rand_i = 0
+                            else:
+                                rand_i = randint(0, length-frag_len)
+                            yield {"id":record.description, "seq":str(record.seq)[rand_i:rand_i+min(frag_len, length)]}
+                            frag_count+=1
+                            if(frag_count>=max_frag):
+                                return
+                            if(length<frag_len):
+                                break
 
             except Exception as err:
                 with open(err_file, 'a') as fout:
@@ -45,20 +48,23 @@ def chrom_frag_generator(dir_path, frag_len, max_frag, type, seq_filter, filter_
                         key = record.id
                         if((type == "chromosome" and seq_filter[key] <= filter_val) or (type == "plasmid" and seq_filter[key] >= filter_val)):                    
                             length = len(record.seq)
-                            if((type== "chromosome" and "plasmid" in record.description)
-                                or (type== "plasmid" and "chromosome" in record.description)):
-                                continue
-                            if(length<frag_len):
-                                rand_i = 0
-                            else:
-                                rand_i = randint(0, length-frag_len)
-                            yield {
-                                "id":record.description, "name":name, 
-                                "seq":str(record.seq)[rand_i:rand_i+min(frag_len,length)],
-                                }
-                            frag_count+=1
-                            if(frag_count>=max_frag):
-                                return
+                            for _ in range(chrom_coverage): 
+                                if((type== "chromosome" and "plasmid" in record.description)
+                                    or (type== "plasmid" and "chromosome" in record.description)):
+                                    break
+                                if(length<frag_len):
+                                    rand_i = 0
+                                else:
+                                    rand_i = randint(0, length-frag_len)
+                                yield {
+                                    "id":record.description, "name":name, 
+                                    "seq":str(record.seq)[rand_i:rand_i+min(frag_len,length)],
+                                    }
+                                frag_count+=1
+                                if(frag_count>=max_frag):
+                                    return
+                                if(length<frag_len):
+                                    break
 
             except Exception as err:
                 with open(err_file, 'a') as fout:
