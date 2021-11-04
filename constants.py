@@ -48,6 +48,16 @@ plas_write_path = "results/plasmid/Data/fragments"
 chrom_write_path = "results/chromosome/Data/fragments"
 extra_plasmid_write_path = "results/extra-plasmid/Data/fragments"
 
+# seq target csv files
+seq_plas_target_path = "results/plasmid/seq_target.csv"
+seq_chrom_target_path = "results/chromosome/seq_target.csv"
+seq_ex_plas_target_path = "results/extra-plasmid/seq_target.csv"
+
+# seq fragment files
+seq_plas_write_path = "results/plasmid/Data/seq"
+seq_chrom_write_path = "results/chromosome/Data/seq"
+seq_extra_plasmid_write_path = "results/extra-plasmid/Data/seq"
+
 # fragment txt files
 plas_txt_write_path = "results/plasmid/extra/frag-txt"
 chrom_txt_write_path = "results/chromosome/extra/frag-txt"
