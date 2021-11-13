@@ -86,6 +86,12 @@ def create_rrna_dirs():
     create_dir_if_needed(chrom_rrna_write_path)
     create_dir_if_needed(ex_plas_rrna_write_path)
 
+def create_gccontent_dirs():
+  # gc-content files
+    create_dir_if_needed(plas_gccontent_write_path)
+    create_dir_if_needed(chrom_gccontent_write_path)
+    create_dir_if_needed(ex_plas_gccontent_write_path)
+
 def create_file_structure():
     ## create dirs if they don't exist
 

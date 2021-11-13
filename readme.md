@@ -44,10 +44,10 @@ chmod 777  '/infernal-1.1.4/src/cmscan.c'
 wget https://downloads.sourceforge.net/project/mummer/mummer/3.23/MUMmer3.23.tar.gz
 ```
 ```
-tar -xvf /MUMmer3.23.tar.gz
+tar -xvf MUMmer3.23.tar.gz
 ```
 ```   
-cd /MUMmer3.23/
+cd MUMmer3.23/
 ```
 ```
 sudo apt-get install csh
@@ -121,4 +121,5 @@ conda install -c conda-forge tqdm
    | [inc_fac.py](./inc_fac.py)  | Features related to the availability of incompatible factor  |
    | [kmer.py](./kmer.py)     | The kmer frequencies of each fragment                        |
    | [orit.py](./orit.py)     | Features related to the availability of OriT                 |
+   | [gccontent.py](./gccontent.py)     | Features gc content percentage of sequences           |
    | [rrna.py](./rrna.py)     | Features related to the availability of rRNA genes           |
