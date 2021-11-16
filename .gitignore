@@ -1,6 +1,6 @@
 error.txt
 log.txt
-/results/*
 *.zip
 TODO.md
 __pycache__
+*results*
